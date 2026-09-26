@@ -1,11 +1,18 @@
 using System.Data;
 using System.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using SER;
 
 namespace DAL
 {
     public class DAO
     {
+        public void VerificarConexion()
+        {
+            using (SqlConnection miCon = Conexion.AbrirConexion())
+            {
+            }
+        }
         public int EjecutarQuery(string comando)
         {
             try
@@ -17,6 +24,10 @@ namespace DAL
                         return miComando.ExecuteNonQuery();
                     }
                 }
+            }
+            catch (ExcepcionesBD)
+            {
+                throw;
             }
             catch (Exception e)
             {
@@ -35,6 +46,10 @@ namespace DAL
                         return comando.ExecuteNonQuery();
                     }
                 }
+            }
+            catch (ExcepcionesBD)
+            {
+                throw;
             }
             catch (Exception e)
             {
@@ -55,6 +70,10 @@ namespace DAL
                         return ds;
                     }
                 }
+            }
+            catch (ExcepcionesBD)
+            {
+                throw;
             }
             catch (Exception e)
             {                

@@ -47,16 +47,16 @@
             lbl_Email.AutoSize = true;
             lbl_Email.Location = new Point(23, 25);
             lbl_Email.Name = "lbl_Email";
-            lbl_Email.Size = new Size(36, 15);
+            lbl_Email.Size = new Size(110, 15);
             lbl_Email.TabIndex = 0;
-            lbl_Email.Tag = "lb_email";
-            lbl_Email.Text = "Email";
+            lbl_Email.Tag = "lb_nombre_usuario";
+            lbl_Email.Text = "Nombre de usuario";
             // 
             // txt_Email
             // 
-            txt_Email.Location = new Point(65, 22);
+            txt_Email.Location = new Point(139, 22);
             txt_Email.Name = "txt_Email";
-            txt_Email.Size = new Size(292, 23);
+            txt_Email.Size = new Size(218, 23);
             txt_Email.TabIndex = 1;
             // 
             // btn_Ingresar
@@ -83,10 +83,10 @@
             // 
             // txt_Pass
             // 
-            txt_Pass.Location = new Point(96, 66);
+            txt_Pass.Location = new Point(139, 66);
             txt_Pass.Name = "txt_Pass";
             txt_Pass.PasswordChar = '*';
-            txt_Pass.Size = new Size(261, 23);
+            txt_Pass.Size = new Size(218, 23);
             txt_Pass.TabIndex = 3;
             // 
             // lbl_Pass

@@ -5,6 +5,7 @@ namespace SER
 {
     public static class Encriptador
     {
+        //para la pw
         public static string Hash(string s)
         {
             try

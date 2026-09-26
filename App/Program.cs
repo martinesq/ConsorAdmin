@@ -1,4 +1,5 @@
 ﻿using BLL;
+using SER;
 using System.Windows.Forms;
 
 namespace AppBase
@@ -14,16 +15,23 @@ namespace AppBase
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-
-            // la integridad se verifica en cada login (UsuarioBLL.Login), aca solo se calcula la linea de base
-            var verificador = new VerificadorBLL();
-            if (!verificador.EstaInicializado())
+            try
             {
-                // primera vez: calcula la linea de base
-                verificador.Inicializar();
+                new ConexionBLL().VerificarConexion();
+                var verificador = new VerificadorBLL();
+                if (!verificador.EstaInicializado())
+                {
+                    // primera vez: calcula la linea de base
+                    verificador.Inicializar();
+                }
+
+                Application.Run(new frmMdiPrincipal());
+            }
+            catch (ExcepcionesBD)
+            {
+                MessageBox.Show("No se pudo conectar con la base de datos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            Application.Run(new frmMdiPrincipal());
         }
     }
 }
