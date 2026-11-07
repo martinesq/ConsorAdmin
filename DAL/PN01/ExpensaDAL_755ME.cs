@@ -64,11 +64,12 @@ namespace DAL
                 AccesoDatos_755ME.Parametro_755ME("@dvh", dvh), AccesoDatos_755ME.Parametro_755ME("@id", idExpensa));
         }
 
-        // CU002: cambio de estado por pago (el DVH lo recalcula la BLL)
-        public void ActualizarEstado_755ME(int idExpensa, string estado)
+        // CU002: cambio de estado por pago
+        public void ActualizarEstado_755ME(int idExpensa, string estado, int dvh)
         {
-            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE EXPENSA SET Estado=@estado WHERE IdExpensa=@id",
-                AccesoDatos_755ME.Parametro_755ME("@estado", estado), AccesoDatos_755ME.Parametro_755ME("@id", idExpensa));
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE EXPENSA SET Estado=@estado, DVH=@dvh WHERE IdExpensa=@id",
+                AccesoDatos_755ME.Parametro_755ME("@estado", estado), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh),
+                AccesoDatos_755ME.Parametro_755ME("@id", idExpensa));
         }
 
         // Expensa pendiente o vencida mas antigua de la unidad, o null si no tiene.
@@ -196,24 +197,6 @@ namespace DAL
             List<ExpensaBE_755ME> lista = new List<ExpensaBE_755ME>();
             foreach (DataRow fila in tabla.Rows) lista.Add(Mapear_755ME(fila));
             return lista;
-        }
-
-        // composicion reconstruida por consorcio y periodo (no hay tabla de detalle)
-        public ComposicionExpensaBE_755ME ObtenerComposicion_755ME(int idExpensa)
-        {
-            DataTable filaExpensa = AccesoDatos_755ME.Consultar_755ME(
-                "SELECT e.Periodo, e.HonorarioAplicado, e.CoeficienteAplicado, e.RecargoPorMora, u.IdConsorcio " +
-                "FROM EXPENSA e INNER JOIN UNIDAD_FUNCIONAL u ON u.IdUnidadFuncional=e.IdUnidadFuncional WHERE e.IdExpensa=@id",
-                AccesoDatos_755ME.Parametro_755ME("@id", idExpensa));
-            if (filaExpensa.Rows.Count == 0) throw new InvalidOperationException("No existe la expensa " + idExpensa);
-            DataRow datos = filaExpensa.Rows[0];
-            ComposicionExpensaBE_755ME comp = new ComposicionExpensaBE_755ME();
-            comp.HonorarioAplicado_755ME = Convert.ToDecimal(datos["HonorarioAplicado"]);
-            comp.Coeficiente_755ME = Convert.ToDecimal(datos["CoeficienteAplicado"]);
-            comp.RecargoPorMora_755ME = Convert.ToDecimal(datos["RecargoPorMora"]);
-            comp.Gastos_755ME = new GastoDAL_755ME().ObtenerGastosPorPeriodo_755ME(Convert.ToDateTime(datos["Periodo"]))
-                .Where(g => g.IdConsorcio_755ME == Convert.ToInt32(datos["IdConsorcio"])).ToList();
-            return comp;
         }
 
         public List<DateTime> ObtenerPeriodosLiquidados_755ME(int idConsorcio)

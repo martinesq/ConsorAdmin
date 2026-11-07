@@ -43,7 +43,16 @@ namespace BLL
         }
         public void CrearIdioma(List<ITraduccion> diccionario, IIdioma nuevoIdioma)
         {
+            VerificadorBLL verificador = new VerificadorBLL();
+            verificador.ActualizarDVH((IVerificable)nuevoIdioma);
+            foreach (Traduccion t in diccionario)
+            {
+                t.IdiomaId = nuevoIdioma.Id;
+                verificador.ActualizarDVH(t);
+            }
             traductorDAL.Crear(diccionario, nuevoIdioma);
+            verificador.ActualizarDVV("Idioma", traductorDAL.ObtenerIdiomas().Cast<IVerificable>().ToList());
+            verificador.ActualizarDVV("Traduccion", traductorDAL.ObtenerTodasLasTraducciones().Cast<IVerificable>().ToList());
         }
     }
 }

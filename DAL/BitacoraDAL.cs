@@ -39,6 +39,7 @@ namespace DAL
             b.Actividad = d["Bitacora_Actividad"].ToString();
             b.EntidadId = d["Bitacora_EntidadId"] == DBNull.Value ? "" : d["Bitacora_EntidadId"].ToString();
             b.Detalle = d["Bitacora_Detalle"] == DBNull.Value ? "" : d["Bitacora_Detalle"].ToString();
+            b.DVH = Convert.ToInt32(d["DVH"]);
             b.Estado = TipoEstado.SinCambios;
             return b;
         }
@@ -50,13 +51,18 @@ namespace DAL
                 {
                     string usuarioId = b.UsuarioId.HasValue ? "'" + b.UsuarioId.Value + "'" : "NULL";
                     _dAO.EjecutarQuery(
-                        "INSERT INTO Bitacora (Bitacora_ID, Bitacora_FechaHora, Bitacora_UsuarioID, Bitacora_Actividad, Bitacora_EntidadId, Bitacora_Detalle) VALUES ('"
+                        "INSERT INTO Bitacora (Bitacora_ID, Bitacora_FechaHora, Bitacora_UsuarioID, Bitacora_Actividad, Bitacora_EntidadId, Bitacora_Detalle, DVH) VALUES ('"
                         + b.Id + "','" + b.FechaHora.ToString("yyyy-MM-dd HH:mm:ss") + "'," + usuarioId + ",'"
                         + b.Actividad.Replace("'", "''") + "','"
-                        + b.EntidadId.Replace("'", "''") + "','" + b.Detalle.Replace("'", "''") + "')");
+                        + b.EntidadId.Replace("'", "''") + "','" + b.Detalle.Replace("'", "''") + "'," + b.DVH + ")");
                     b.Estado = TipoEstado.SinCambios;
                 }
             }
+        }
+
+        public void ActualizarDvh(Guid id, int dvh)
+        {
+            _dAO.EjecutarQuery("UPDATE Bitacora SET DVH=" + dvh + " WHERE Bitacora_ID='" + id + "'");
         }
     }
 }

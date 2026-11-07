@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class Etiqueta : IEtiqueta
+    public class Etiqueta : IEtiqueta, IVerificable
     {
+        private static readonly string[] _atributosVerificables = { "Nombre" };
+
         public Etiqueta()
         {
             Id = Guid.NewGuid();
@@ -22,5 +24,8 @@ namespace BE
         public Guid Id { get; set; }
         public TipoEstado Estado { get; set; }
         public bool Baja { get; set; }
+        public int DVH { get; set; }
+        public string NombreTabla { get { return "Etiqueta"; } }
+        public string[] AtributosVerificables { get { return _atributosVerificables; } }
     }
 }

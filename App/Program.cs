@@ -13,7 +13,6 @@ namespace AppBase
         static void Main()
         {
             // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             try
             {
@@ -21,7 +20,6 @@ namespace AppBase
                 var verificador = new VerificadorBLL();
                 if (!verificador.EstaInicializado())
                 {
-                    // primera vez: calcula la linea de base
                     verificador.Inicializar();
                 }
 

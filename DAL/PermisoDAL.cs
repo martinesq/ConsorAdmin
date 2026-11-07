@@ -29,10 +29,9 @@ namespace DAL
             try
             {
                 if (esfamilia)
-                    mDAO.EjecutarQuery("INSERT INTO Permiso (Permiso_ID, Permiso_Descripcion) VALUES ('" + p.Id + "','" + p.Nombre + "')");
+                    mDAO.EjecutarQuery("INSERT INTO Permiso (Permiso_ID, Permiso_Descripcion, DVH) VALUES ('" + p.Id + "','" + p.Nombre + "'," + p.DVH + ")");
                 else
-                    // Permiso_Tipo es int: se guarda el valor del enum, no el nombre
-                    mDAO.EjecutarQuery("INSERT INTO Permiso (Permiso_ID, Permiso_Descripcion,Permiso_Tipo) VALUES ('" + p.Id + "','" + p.Nombre + "'," + (int)p.Permiso + ")");
+                    mDAO.EjecutarQuery("INSERT INTO Permiso (Permiso_ID, Permiso_Descripcion,Permiso_Tipo, DVH) VALUES ('" + p.Id + "','" + p.Nombre + "'," + (int)p.Permiso + "," + p.DVH + ")");
                 return p;
             }
             catch (Exception)
@@ -203,6 +202,7 @@ namespace DAL
                             permiso.Permiso = (TipoPatente)Int32.Parse(dr["Permiso_Tipo"].ToString());
                         }
                         permiso.Nombre = dr["Permiso_Descripcion"].ToString();
+                        permiso.DVH = Convert.ToInt32(dr["DVH"]);
                         permisosDiccionario[permiso.Id] = permiso;
                     }
                 }
@@ -288,6 +288,54 @@ namespace DAL
                 f.AgregarPermiso(p);
             }
         }
+
+        public List<FamiliaPatenteBE_755ME> ObtenerFamiliaPatente()
+        {
+            List<FamiliaPatenteBE_755ME> lista = new List<FamiliaPatenteBE_755ME>();
+            DataSet d = mDAO.ObtenerDatos("SELECT * FROM Familia_Patente");
+            foreach (DataRow dr in d.Tables[0].Rows)
+            {
+                lista.Add(new FamiliaPatenteBE_755ME
+                {
+                    PadreId = Guid.Parse(dr["Padre_ID"].ToString()),
+                    HijoId = Guid.Parse(dr["Hijo_ID"].ToString()),
+                    DVH = Convert.ToInt32(dr["DVH"])
+                });
+            }
+            return lista;
+        }
+
+        public List<UsuarioPermisoBE_755ME> ObtenerUsuarioPermiso()
+        {
+            List<UsuarioPermisoBE_755ME> lista = new List<UsuarioPermisoBE_755ME>();
+            DataSet d = mDAO.ObtenerDatos("SELECT * FROM Usuario_Permiso");
+            foreach (DataRow dr in d.Tables[0].Rows)
+            {
+                lista.Add(new UsuarioPermisoBE_755ME
+                {
+                    PermisoId = Guid.Parse(dr["Permiso_ID"].ToString()),
+                    UsuarioId = Guid.Parse(dr["Usuario_ID"].ToString()),
+                    DVH = Convert.ToInt32(dr["DVH"])
+                });
+            }
+            return lista;
+        }
+
+        public void ActualizarDvhPermiso(Guid id, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Permiso SET DVH=" + dvh + " WHERE Permiso_ID='" + id + "'");
+        }
+
+        public void ActualizarDvhFamiliaPatente(Guid padreId, Guid hijoId, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Familia_Patente SET DVH=" + dvh + " WHERE Padre_ID='" + padreId + "' AND Hijo_ID='" + hijoId + "'");
+        }
+
+        public void ActualizarDvhUsuarioPermiso(Guid permisoId, Guid usuarioId, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Usuario_Permiso SET DVH=" + dvh + " WHERE Permiso_ID='" + permisoId + "' AND Usuario_ID='" + usuarioId + "'");
+        }
+
         public void GuardarFamiliaUsuario(Usuario u)
         {
             mDAO.EjecutarQuery("DELETE FROM Usuario_Permiso where Usuario_ID ='" + u.Id + "'");

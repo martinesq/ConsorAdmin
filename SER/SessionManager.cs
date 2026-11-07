@@ -88,7 +88,7 @@ namespace SER
         }
         public static void AgregarObservador(IIdiomaObserver o)
         {
-            _observers.Add(o);
+            if (!_observers.Contains(o)) _observers.Add(o);
         }
         public static void QuitarObservador(IIdiomaObserver o)
         {

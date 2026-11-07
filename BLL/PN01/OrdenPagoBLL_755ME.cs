@@ -5,30 +5,19 @@ namespace BLL
 {
     public class OrdenPagoBLL_755ME
     {
-        private readonly ConsorcioDAL_755ME _consorcioDAL = new ConsorcioDAL_755ME();
-        private readonly ExpensaDAL_755ME _expensaDAL = new ExpensaDAL_755ME();
         private readonly OrdenPagoDAL_755ME _ordenDAL = new OrdenPagoDAL_755ME();
-        private readonly UnidadFuncionalDAL_755ME _ufDAL = new UnidadFuncionalDAL_755ME();
+        private readonly ExpensaBLL_755ME _expensaBLL = new ExpensaBLL_755ME();
+        private readonly UnidadFuncionalBLL_755ME _ufBLL = new UnidadFuncionalBLL_755ME();
         private readonly VerificadorBLL _verificador = new VerificadorBLL();
         private readonly BitacoraBLL _bitacora = new BitacoraBLL();
 
         // lo deja ArmarTalon_755ME para GenerarOrdenPago_755ME
         private string _propietarioSnapshotEnCurso = "";
 
-        public List<ConsorcioBE_755ME> ObtenerConsorciosAsignados_755ME()
-        {
-            return _consorcioDAL.ObtenerConsorciosConUnidadesActivas_755ME();
-        }
-
-        public List<UnidadFuncionalBE_755ME> ObtenerUnidadesPendientesDeOrden_755ME(int idConsorcio)
-        {
-            return _expensaDAL.ObtenerUnidadesConExpensaSinOrden_755ME(idConsorcio);
-        }
-
         public OrdenDePagoBE_755ME GenerarOrdenPago_755ME(int idUF)
         {
-            ExpensaBE_755ME expensa = _expensaDAL.ObtenerExpensaLiquidada_755ME(idUF);
-            ConsorcistaBE_755ME propietario = _ufDAL.ObtenerDatosPropietario_755ME(idUF);
+            ExpensaBE_755ME expensa = _expensaBLL.ObtenerExpensaLiquidada_755ME(idUF);
+            ConsorcistaBE_755ME propietario = _ufBLL.ObtenerDatosPropietario_755ME(idUF);
             UnidadFuncionalBE_755ME uf = new UnidadFuncionalBE_755ME { IdUnidadFuncional_755ME = idUF };
             ArmarTalon_755ME(uf, propietario);
 

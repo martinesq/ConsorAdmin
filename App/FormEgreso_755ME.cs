@@ -9,6 +9,8 @@ namespace AppBase
     public partial class FormEgreso_755ME : Form, IIdiomaObserver
     {
         private readonly EgresoBLL_755ME _bll = new EgresoBLL_755ME();
+        private readonly ConsorcioBLL_755ME _consorcioBLL = new ConsorcioBLL_755ME();
+        private readonly ServicioBLL_755ME _servicioBLL = new ServicioBLL_755ME();
         private ServicioBE_755ME? _servicioSeleccionado;
 
         public FormEgreso_755ME()
@@ -20,12 +22,11 @@ namespace AppBase
         {
             SessionManager.AgregarObservador(this);
             ActualizarIdioma(SessionManager.Idioma);
-            List<ConsorcioBE_755ME> consorcios = _bll.ObtenerConsorciosAsignados_755ME();
+            List<ConsorcioBE_755ME> consorcios = _consorcioBLL.ObtenerConsorciosAsignados_755ME();
             cboConsorcio.DisplayMember = "Nombre_755ME";
             cboConsorcio.DataSource = consorcios;
             bool sinConsorcios = consorcios.Count == 0;
             lblSinConsorcios.Visible = sinConsorcios;
-            lblSinConsorcios.Text = sinConsorcios ? "No tiene consorcios asignados" : "";
             cboConsorcio.Enabled = !sinConsorcios;
         }
 
@@ -35,7 +36,7 @@ namespace AppBase
             LimpiarSeleccion_755ME();
             if (cboConsorcio.SelectedItem is not ConsorcioBE_755ME consorcio) return;
 
-            List<ServicioBE_755ME> servicios = _bll.ObtenerServiciosAprobados_755ME(consorcio.IdConsorcio_755ME);
+            List<ServicioBE_755ME> servicios = _servicioBLL.ObtenerServiciosAprobadosPendientes_755ME(consorcio.IdConsorcio_755ME);
             foreach (ServicioBE_755ME s in servicios)
             {
                 int fila = dgvServicios.Rows.Add(s.Categoria_755ME, s.Descripcion_755ME, s.Costo_755ME.ToString("F2"));
@@ -107,7 +108,7 @@ namespace AppBase
                 {
                     _bll.RegistrarEgreso_755ME(null, txtConcepto.Text, numMonto.Value, null);
                 }
-                MessageBox.Show("Egreso registrado", Text);
+                MessageBox.Show("Egreso registrado. Se cargo el gasto para la proxima liquidacion", Text);
                 cboConsorcio_SelectedIndexChanged(sender, e);
             }
             catch (InvalidOperationException ex)

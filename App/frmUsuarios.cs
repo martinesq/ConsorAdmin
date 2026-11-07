@@ -49,6 +49,7 @@ namespace AppBase
             dataUsuarios.Visible = true;
             btnAceptar.Visible = editor;
             btnNuevo.Visible = true;
+            btnReactivar.Visible = datos && mUser != null && mUser.Baja;
         }
 
         private void LoadForm(object sender, EventArgs e)
@@ -69,6 +70,11 @@ namespace AppBase
             check.HeaderText = lbBloq.Text;
             check.DataPropertyName = "Bloq";
             dataUsuarios.Columns.Add(check);
+            DataGridViewCheckBoxColumn baja = new DataGridViewCheckBoxColumn();
+            baja.Name = "Baja";
+            baja.HeaderText = IdiomaUI_755ME.Texto("lb_col_baja", "Baja");
+            baja.DataPropertyName = "Baja";
+            dataUsuarios.Columns.Add(baja);
 
 
 
@@ -139,6 +145,16 @@ namespace AppBase
             if (mUser.Bloq)
             {
                 mUser.Bloq = false;
+                _users.Save(mUser);
+            }
+            LoadForm(sender, e);
+        }
+
+        private void Reactivar(object sender, EventArgs e)
+        {
+            if (mUser.Baja)
+            {
+                mUser.Baja = false;
                 _users.Save(mUser);
             }
             LoadForm(sender, e);

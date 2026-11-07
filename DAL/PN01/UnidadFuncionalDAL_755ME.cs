@@ -14,6 +14,7 @@ namespace DAL
             u.Tipo_755ME = fila["Tipo"].ToString() ?? "";
             u.Coeficiente_755ME = Convert.ToDecimal(fila["Coeficiente"]);
             u.Activa_755ME = Convert.ToBoolean(fila["Activa"]);
+            u.DVH = fila["DVH"] == DBNull.Value ? 0 : Convert.ToInt32(fila["DVH"]);
             return u;
         }
 
@@ -63,28 +64,58 @@ namespace DAL
             return lista;
         }
 
-        public int Insertar_755ME(UnidadFuncionalBE_755ME uf)
+        public UnidadFuncionalBE_755ME ObtenerPorId_755ME(int idUF)
         {
+            DataTable tabla = AccesoDatos_755ME.Consultar_755ME("SELECT * FROM UNIDAD_FUNCIONAL WHERE IdUnidadFuncional=@id",
+                AccesoDatos_755ME.Parametro_755ME("@id", idUF));
+            if (tabla.Rows.Count == 0) throw new InvalidOperationException("No existe la unidad funcional " + idUF);
+            return Mapear_755ME(tabla.Rows[0]);
+        }
+
+        // el numero no se repite dentro de un consorcio
+        public UnidadFuncionalBE_755ME? ObtenerPorNumero_755ME(string numero, int idConsorcio)
+        {
+            DataTable tabla = AccesoDatos_755ME.Consultar_755ME("SELECT * FROM UNIDAD_FUNCIONAL WHERE Numero=@num AND IdConsorcio=@con",
+                AccesoDatos_755ME.Parametro_755ME("@num", numero), AccesoDatos_755ME.Parametro_755ME("@con", idConsorcio));
+            return tabla.Rows.Count == 0 ? null : Mapear_755ME(tabla.Rows[0]);
+        }
+
+        public int Insertar_755ME(UnidadFuncionalBE_755ME uf, int dvh)
+        {
+            uf.DVH = dvh;
             uf.IdUnidadFuncional_755ME = AccesoDatos_755ME.Insertar_755ME(
-                "INSERT INTO UNIDAD_FUNCIONAL (IdConsorcio, Numero, Tipo, Coeficiente, Activa) VALUES (@con, @num, @tipo, @coef, @activa)",
+                "INSERT INTO UNIDAD_FUNCIONAL (IdConsorcio, Numero, Tipo, Coeficiente, Activa, DVH) VALUES (@con, @num, @tipo, @coef, @activa, @dvh)",
                 AccesoDatos_755ME.Parametro_755ME("@con", uf.IdConsorcio_755ME), AccesoDatos_755ME.Parametro_755ME("@num", uf.Numero_755ME),
                 AccesoDatos_755ME.Parametro_755ME("@tipo", uf.Tipo_755ME), AccesoDatos_755ME.Parametro_755ME("@coef", uf.Coeficiente_755ME),
-                AccesoDatos_755ME.Parametro_755ME("@activa", uf.Activa_755ME));
+                AccesoDatos_755ME.Parametro_755ME("@activa", uf.Activa_755ME), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh));
             return uf.IdUnidadFuncional_755ME;
         }
 
-        public void Actualizar_755ME(UnidadFuncionalBE_755ME uf)
+        public void Actualizar_755ME(UnidadFuncionalBE_755ME uf, int dvh)
         {
+            uf.DVH = dvh;
+            // el trigger lee la operacion de la sesion para marcar la version en el historial
             AccesoDatos_755ME.EjecutarNoQuery_755ME(
-                "UPDATE UNIDAD_FUNCIONAL SET Numero=@num, Tipo=@tipo, Coeficiente=@coef WHERE IdUnidadFuncional=@id",
+                "EXEC sp_set_session_context N'Operacion', @operacion; " +
+                "UPDATE UNIDAD_FUNCIONAL SET Numero=@num, Tipo=@tipo, Coeficiente=@coef, Activa=@activa, DVH=@dvh WHERE IdUnidadFuncional=@id",
+                AccesoDatos_755ME.Parametro_755ME("@operacion", uf.EsRestauracion_755ME ? "Restauracion" : "Modificacion"),
                 AccesoDatos_755ME.Parametro_755ME("@num", uf.Numero_755ME), AccesoDatos_755ME.Parametro_755ME("@tipo", uf.Tipo_755ME),
-                AccesoDatos_755ME.Parametro_755ME("@coef", uf.Coeficiente_755ME), AccesoDatos_755ME.Parametro_755ME("@id", uf.IdUnidadFuncional_755ME));
+                AccesoDatos_755ME.Parametro_755ME("@coef", uf.Coeficiente_755ME), AccesoDatos_755ME.Parametro_755ME("@activa", uf.Activa_755ME),
+                AccesoDatos_755ME.Parametro_755ME("@dvh", dvh),
+                AccesoDatos_755ME.Parametro_755ME("@id", uf.IdUnidadFuncional_755ME));
         }
 
-        public void ActualizarActiva_755ME(int idUF, bool activa)
+        public void ActualizarActiva_755ME(int idUF, bool activa, int dvh)
         {
-            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE UNIDAD_FUNCIONAL SET Activa=@activa WHERE IdUnidadFuncional=@id",
-                AccesoDatos_755ME.Parametro_755ME("@activa", activa), AccesoDatos_755ME.Parametro_755ME("@id", idUF));
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE UNIDAD_FUNCIONAL SET Activa=@activa, DVH=@dvh WHERE IdUnidadFuncional=@id",
+                AccesoDatos_755ME.Parametro_755ME("@activa", activa), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh),
+                AccesoDatos_755ME.Parametro_755ME("@id", idUF));
+        }
+
+        public void ActualizarDvh_755ME(int idUF, int dvh)
+        {
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE UNIDAD_FUNCIONAL SET DVH=@dvh WHERE IdUnidadFuncional=@id",
+                AccesoDatos_755ME.Parametro_755ME("@dvh", dvh), AccesoDatos_755ME.Parametro_755ME("@id", idUF));
         }
 
         // no se puede dar de baja una unidad con expensas pendientes o vencidas
@@ -95,30 +126,7 @@ namespace DAL
             return Convert.ToInt32(r);
         }
 
-        // ---------- Propietario (UNIDAD_CONSORCISTA) ----------
-
-        // IdConsorcista propietario actual de la unidad, o null si todavia no tiene uno asignado.
-        public int? ObtenerIdPropietarioActual_755ME(int idUF)
-        {
-            object? r = AccesoDatos_755ME.Escalar_755ME(
-                "SELECT IdConsorcista FROM UNIDAD_CONSORCISTA WHERE IdUnidadFuncional=@uf AND EsPropietario=1",
-                AccesoDatos_755ME.Parametro_755ME("@uf", idUF));
-            return r == null || r == DBNull.Value ? (int?)null : Convert.ToInt32(r);
-        }
-
-        public void AsignarPropietario_755ME(int idUF, int idConsorcista)
-        {
-            AccesoDatos_755ME.EjecutarNoQuery_755ME(
-                "INSERT INTO UNIDAD_CONSORCISTA (IdUnidadFuncional, IdConsorcista, EsPropietario) VALUES (@uf, @cta, 1)",
-                AccesoDatos_755ME.Parametro_755ME("@uf", idUF), AccesoDatos_755ME.Parametro_755ME("@cta", idConsorcista));
-        }
-
-        public void QuitarPropietario_755ME(int idUF, int idConsorcista)
-        {
-            AccesoDatos_755ME.EjecutarNoQuery_755ME(
-                "DELETE FROM UNIDAD_CONSORCISTA WHERE IdUnidadFuncional=@uf AND IdConsorcista=@cta AND EsPropietario=1",
-                AccesoDatos_755ME.Parametro_755ME("@uf", idUF), AccesoDatos_755ME.Parametro_755ME("@cta", idConsorcista));
-        }
+        // ---------- Propietario ----------
 
         public List<UnidadFuncionalBE_755ME> ObtenerUnidadesDelPropietario_755ME(int idConsorcista)
         {

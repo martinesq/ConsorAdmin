@@ -30,6 +30,7 @@ namespace BLL
             _verificador.ActualizarDVH(entity);
             base.Save(entity);
             _verificador.ActualizarDVV(entity.NombreTabla, _crud.GetAll().Cast<IVerificable>().ToList());
+            new PermisoBLL().ActualizarDvhPermisosDeUsuario(entity.Id);
             string actividad = esNuevo ? "Alta Usuario" : (esBaja ? "Baja Usuario" : "Modificacion Usuario");
             _bitacora.RegistrarDeUsuarioActual(actividad, entity.Id.ToString(), entity.Email);
         }
@@ -73,8 +74,6 @@ namespace BLL
                 throw;
             }
         }
-        // verifica la integridad (DVH/DVV) en cada login y decide segun el rol
-        // la baja se chequea despues para no mostrar el estado de la cuenta si la integridad falla
         private TipoResultadoLogin CompletarLogin(Usuario user)
         {
             ResultadoIntegridad integridad = _verificador.VerificarIntegridadSistema();
@@ -140,19 +139,22 @@ namespace BLL
             {
                 try
                 {
-                    foreach (PermisoCompuesto permiso in p.ObtenerHijos)
+                    // dos familias pueden compartir patentes
+                    foreach (PermisoCompuesto perm in u.Permisos)
                     {
-                        foreach (PermisoCompuesto perm in u.Permisos)
+                        if (p.Id == perm.Id)
+                            tiene = true;
+                        foreach (PermisoCompuesto permiso in p.ObtenerHijos)
                         {
-                            if (p.Id == perm.Id || permiso.Id == perm.Id)
+                            if (permiso.Id == perm.Id)
                                 tiene = true;
-                            if (perm is Familia)
+                        }
+                        if (perm is Familia)
+                        {
+                            foreach (PermisoCompuesto pat in perm.ObtenerHijos)
                             {
-                                foreach (PermisoCompuesto pat in perm.ObtenerHijos)
-                                {
-                                    if (p.Id == pat.Id || pat.Id == permiso.Id)
-                                        tiene = true;
-                                }
+                                if (p.Id == pat.Id)
+                                    tiene = true;
                             }
                         }
                     }

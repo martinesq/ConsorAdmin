@@ -9,7 +9,12 @@ namespace AppBase
     // Maestros: alta/baja de Consorcio, Unidad Funcional y Consorcista (solo Administrador global)
     public partial class FormMantenimientoConsorcios_755ME : Form, IIdiomaObserver
     {
-        private readonly MaestrosBLL_755ME _bll = new MaestrosBLL_755ME();
+        private readonly ConsorcioBLL_755ME _consorcioBLL = new ConsorcioBLL_755ME();
+        private readonly UnidadFuncionalBLL_755ME _ufBLL = new UnidadFuncionalBLL_755ME();
+        private readonly ConsorcistaBLL_755ME _consorcistaBLL = new ConsorcistaBLL_755ME();
+        private readonly UnidadConsorcistaBLL_755ME _unidadConsorcistaBLL = new UnidadConsorcistaBLL_755ME();
+        private readonly ProveedorBLL_755ME _proveedorBLL = new ProveedorBLL_755ME();
+        private ProveedorBE_755ME? _proveedorSeleccionado;
         private ConsorcioBE_755ME? _consorcioSeleccionado;
         private UnidadFuncionalBE_755ME? _unidadSeleccionada;
         private ConsorcistaBE_755ME? _consorcistaSeleccionado;
@@ -32,15 +37,17 @@ namespace AppBase
             SessionManager.AgregarObservador(this);
             ActualizarIdioma(SessionManager.Idioma);
             cboGestor.DisplayMember = "Email";
-            cboGestor.DataSource = _bll.ObtenerUsuariosGestores_755ME();
+            cboGestor.DataSource = _consorcioBLL.ObtenerUsuariosGestores_755ME();
 
             CargarConsorcios_755ME();
             CargarComboConsorcios_755ME();
             CargarConsorcistas_755ME();
             CargarComboUnidadesPropietario_755ME();
+            CargarProveedores_755ME();
             LimpiarDetalleConsorcio_755ME();
             LimpiarDetalleUnidad_755ME();
             LimpiarDetalleConsorcista_755ME();
+            LimpiarDetalleProveedor_755ME();
         }
 
         // ---------- Consorcios ----------
@@ -48,7 +55,7 @@ namespace AppBase
         private void CargarConsorcios_755ME()
         {
             dgvConsorcios.Rows.Clear();
-            foreach (ConsorcioBE_755ME c in _bll.ObtenerTodosLosConsorcios_755ME())
+            foreach (ConsorcioBE_755ME c in _consorcioBLL.ObtenerTodosLosConsorcios_755ME())
             {
                 int fila = dgvConsorcios.Rows.Add(c.Nombre_755ME, c.Direccion_755ME, c.CantidadUnidades_755ME, c.Activo_755ME ? "Si" : "No", ObtenerEmailUsuario_755ME(c.IdGestor_755ME));
                 dgvConsorcios.Rows[fila].Tag = c;
@@ -66,7 +73,8 @@ namespace AppBase
         private void dgvConsorcios_SelectionChanged(object sender, EventArgs e)
         {
             // puede llegar con Tag == null porque lo dispara el Rows.Add
-            if (dgvConsorcios.SelectedRows.Count == 0 || dgvConsorcios.SelectedRows[0].Tag == null)
+            // solo cuenta la fila que elige el usuario, no la que la grilla selecciona sola al cargar
+            if (!dgvConsorcios.Focused || dgvConsorcios.SelectedRows.Count == 0 || dgvConsorcios.SelectedRows[0].Tag == null)
             {
                 LimpiarDetalleConsorcio_755ME();
                 return;
@@ -106,7 +114,7 @@ namespace AppBase
                 consorcio.Direccion_755ME = txtDireccion.Text;
                 consorcio.CantidadUnidades_755ME = (int)numCantidadUnidades.Value;
                 consorcio.IdGestor_755ME = (cboGestor.SelectedItem as Usuario)?.Id ?? Guid.Empty;
-                _bll.GuardarConsorcio_755ME(consorcio);
+                _consorcioBLL.GuardarConsorcio_755ME(consorcio);
                 MessageBox.Show("Guardado", Text);
                 CargarConsorcios_755ME();
                 CargarComboConsorcios_755ME();
@@ -123,7 +131,7 @@ namespace AppBase
             if (_consorcioSeleccionado == null) return;
             try
             {
-                _bll.InactivarConsorcio_755ME(_consorcioSeleccionado.IdConsorcio_755ME);
+                _consorcioBLL.InactivarConsorcio_755ME(_consorcioSeleccionado.IdConsorcio_755ME);
                 CargarConsorcios_755ME();
                 CargarComboConsorcios_755ME();
                 LimpiarDetalleConsorcio_755ME();
@@ -137,7 +145,7 @@ namespace AppBase
         private void btnReactivarConsorcio_Click(object sender, EventArgs e)
         {
             if (_consorcioSeleccionado == null) return;
-            _bll.ReactivarConsorcio_755ME(_consorcioSeleccionado.IdConsorcio_755ME);
+            _consorcioBLL.ReactivarConsorcio_755ME(_consorcioSeleccionado.IdConsorcio_755ME);
             CargarConsorcios_755ME();
             CargarComboConsorcios_755ME();
             LimpiarDetalleConsorcio_755ME();
@@ -149,7 +157,7 @@ namespace AppBase
         {
             object? seleccionActual = cboConsorcioUnidad.SelectedItem;
             cboConsorcioUnidad.DisplayMember = "Nombre_755ME";
-            cboConsorcioUnidad.DataSource = _bll.ObtenerTodosLosConsorcios_755ME();
+            cboConsorcioUnidad.DataSource = _consorcioBLL.ObtenerTodosLosConsorcios_755ME();
             if (seleccionActual != null) cboConsorcioUnidad.SelectedItem = seleccionActual;
         }
 
@@ -163,7 +171,7 @@ namespace AppBase
         {
             dgvUnidades.Rows.Clear();
             if (cboConsorcioUnidad.SelectedItem is not ConsorcioBE_755ME consorcio) return;
-            foreach (UnidadFuncionalBE_755ME u in _bll.ObtenerUnidadesPorConsorcio_755ME(consorcio.IdConsorcio_755ME))
+            foreach (UnidadFuncionalBE_755ME u in _ufBLL.ObtenerUnidadesPorConsorcio_755ME(consorcio.IdConsorcio_755ME))
             {
                 int fila = dgvUnidades.Rows.Add(u.Numero_755ME, u.Tipo_755ME, u.Coeficiente_755ME, u.Activa_755ME ? "Si" : "No");
                 dgvUnidades.Rows[fila].Tag = u;
@@ -174,7 +182,8 @@ namespace AppBase
 
         private void dgvUnidades_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvUnidades.SelectedRows.Count == 0 || dgvUnidades.SelectedRows[0].Tag == null)
+            // solo cuenta la fila que elige el usuario, no la que la grilla selecciona sola al cargar
+            if (!dgvUnidades.Focused || dgvUnidades.SelectedRows.Count == 0 || dgvUnidades.SelectedRows[0].Tag == null)
             {
                 LimpiarDetalleUnidad_755ME();
                 return;
@@ -185,6 +194,20 @@ namespace AppBase
             numCoeficiente.Value = _unidadSeleccionada.Coeficiente_755ME;
             btnInactivarUnidad.Enabled = _unidadSeleccionada.Activa_755ME;
             btnReactivarUnidad.Enabled = !_unidadSeleccionada.Activa_755ME;
+            btnVerHistorialUnidad.Enabled = true;
+        }
+
+        private void btnVerHistorialUnidad_Click(object sender, EventArgs e)
+        {
+            if (_unidadSeleccionada == null || cboConsorcioUnidad.SelectedItem is not ConsorcioBE_755ME consorcio) return;
+
+            using (var pantalla = new FormHistorialUnidad_755ME(consorcio.IdConsorcio_755ME, consorcio.Nombre_755ME, _unidadSeleccionada.IdUnidadFuncional_755ME))
+            {
+                pantalla.ShowDialog(this);
+            }
+            // la unidad pudo haberse restaurado desde el historial
+            CargarUnidades_755ME();
+            LimpiarDetalleUnidad_755ME();
         }
 
         private void btnNuevaUnidad_Click(object sender, EventArgs e)
@@ -201,6 +224,7 @@ namespace AppBase
             numCoeficiente.Value = 0;
             btnInactivarUnidad.Enabled = false;
             btnReactivarUnidad.Enabled = false;
+            btnVerHistorialUnidad.Enabled = false;
         }
 
         private void btnGuardarUnidad_Click(object sender, EventArgs e)
@@ -212,7 +236,7 @@ namespace AppBase
                 uf.Numero_755ME = txtNumero.Text;
                 uf.Tipo_755ME = txtTipo.Text;
                 uf.Coeficiente_755ME = numCoeficiente.Value;
-                _bll.GuardarUnidad_755ME(uf);
+                _ufBLL.GuardarUnidad_755ME(uf);
                 MessageBox.Show("Guardado", Text);
                 CargarUnidades_755ME();
                 LimpiarDetalleUnidad_755ME();
@@ -228,7 +252,7 @@ namespace AppBase
             if (_unidadSeleccionada == null) return;
             try
             {
-                _bll.InactivarUnidad_755ME(_unidadSeleccionada.IdUnidadFuncional_755ME);
+                _ufBLL.InactivarUnidad_755ME(_unidadSeleccionada.IdUnidadFuncional_755ME);
                 CargarUnidades_755ME();
                 LimpiarDetalleUnidad_755ME();
             }
@@ -241,7 +265,7 @@ namespace AppBase
         private void btnReactivarUnidad_Click(object sender, EventArgs e)
         {
             if (_unidadSeleccionada == null) return;
-            _bll.ReactivarUnidad_755ME(_unidadSeleccionada.IdUnidadFuncional_755ME);
+            _ufBLL.ReactivarUnidad_755ME(_unidadSeleccionada.IdUnidadFuncional_755ME);
             CargarUnidades_755ME();
             LimpiarDetalleUnidad_755ME();
         }
@@ -251,7 +275,7 @@ namespace AppBase
         private void CargarConsorcistas_755ME()
         {
             dgvConsorcistas.Rows.Clear();
-            foreach (ConsorcistaBE_755ME c in _bll.ObtenerTodosLosConsorcistas_755ME())
+            foreach (ConsorcistaBE_755ME c in _consorcistaBLL.ObtenerTodosLosConsorcistas_755ME())
             {
                 int fila = dgvConsorcistas.Rows.Add(c.Nombre_755ME, c.Apellido_755ME, c.DNI_755ME, c.Activo_755ME ? "Si" : "No");
                 dgvConsorcistas.Rows[fila].Tag = c;
@@ -262,7 +286,8 @@ namespace AppBase
 
         private void dgvConsorcistas_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvConsorcistas.SelectedRows.Count == 0 || dgvConsorcistas.SelectedRows[0].Tag == null)
+            // solo cuenta la fila que elige el usuario, no la que la grilla selecciona sola al cargar
+            if (!dgvConsorcistas.Focused || dgvConsorcistas.SelectedRows.Count == 0 || dgvConsorcistas.SelectedRows[0].Tag == null)
             {
                 LimpiarDetalleConsorcista_755ME();
                 return;
@@ -304,7 +329,7 @@ namespace AppBase
                 consorcista.Nombre_755ME = txtNombreConsorcista.Text;
                 consorcista.Apellido_755ME = txtApellidoConsorcista.Text;
                 consorcista.DNI_755ME = txtDniConsorcista.Text;
-                _bll.GuardarConsorcista_755ME(consorcista);
+                _consorcistaBLL.GuardarConsorcista_755ME(consorcista);
                 MessageBox.Show("Guardado", Text);
                 CargarConsorcistas_755ME();
                 LimpiarDetalleConsorcista_755ME();
@@ -320,7 +345,7 @@ namespace AppBase
             if (_consorcistaSeleccionado == null) return;
             try
             {
-                _bll.InactivarConsorcista_755ME(_consorcistaSeleccionado.IdConsorcista_755ME);
+                _consorcistaBLL.InactivarConsorcista_755ME(_consorcistaSeleccionado.IdConsorcista_755ME);
                 CargarConsorcistas_755ME();
                 LimpiarDetalleConsorcista_755ME();
             }
@@ -333,7 +358,7 @@ namespace AppBase
         private void btnReactivarConsorcista_Click(object sender, EventArgs e)
         {
             if (_consorcistaSeleccionado == null) return;
-            _bll.ReactivarConsorcista_755ME(_consorcistaSeleccionado.IdConsorcista_755ME);
+            _consorcistaBLL.ReactivarConsorcista_755ME(_consorcistaSeleccionado.IdConsorcista_755ME);
             CargarConsorcistas_755ME();
             LimpiarDetalleConsorcista_755ME();
         }
@@ -342,8 +367,8 @@ namespace AppBase
 
         private void CargarComboUnidadesPropietario_755ME()
         {
-            Dictionary<int, string> nombresConsorcio = _bll.ObtenerTodosLosConsorcios_755ME().ToDictionary(c => c.IdConsorcio_755ME, c => c.Nombre_755ME);
-            List<OpcionUnidadPropietario_755ME> opciones = _bll.ObtenerTodasLasUnidades_755ME()
+            Dictionary<int, string> nombresConsorcio = _consorcioBLL.ObtenerTodosLosConsorcios_755ME().ToDictionary(c => c.IdConsorcio_755ME, c => c.Nombre_755ME);
+            List<OpcionUnidadPropietario_755ME> opciones = _ufBLL.ObtenerTodasLasUnidades_755ME()
                 .Select(u => new OpcionUnidadPropietario_755ME
                 {
                     Unidad = u,
@@ -358,7 +383,7 @@ namespace AppBase
             dgvUnidadesPropietario.Rows.Clear();
             btnQuitarPropietario.Enabled = false;
             if (_consorcistaSeleccionado == null) return;
-            foreach (UnidadFuncionalBE_755ME uf in _bll.ObtenerUnidadesDelPropietario_755ME(_consorcistaSeleccionado.IdConsorcista_755ME))
+            foreach (UnidadFuncionalBE_755ME uf in _ufBLL.ObtenerUnidadesDelPropietario_755ME(_consorcistaSeleccionado.IdConsorcista_755ME))
             {
                 int fila = dgvUnidadesPropietario.Rows.Add(uf.Numero_755ME);
                 dgvUnidadesPropietario.Rows[fila].Tag = uf;
@@ -382,7 +407,7 @@ namespace AppBase
             if (_consorcistaSeleccionado == null || cboUnidadPropietario.SelectedItem is not OpcionUnidadPropietario_755ME opcion) return;
             try
             {
-                _bll.AsignarPropietario_755ME(opcion.Unidad.IdUnidadFuncional_755ME, _consorcistaSeleccionado.IdConsorcista_755ME);
+                _unidadConsorcistaBLL.AsignarPropietario_755ME(opcion.Unidad.IdUnidadFuncional_755ME, _consorcistaSeleccionado.IdConsorcista_755ME);
                 CargarUnidadesDelConsorcista_755ME();
             }
             catch (Exception ex)
@@ -397,13 +422,88 @@ namespace AppBase
                 || dgvUnidadesPropietario.SelectedRows[0].Tag is not UnidadFuncionalBE_755ME unidad) return;
             try
             {
-                _bll.QuitarPropietario_755ME(unidad.IdUnidadFuncional_755ME, _consorcistaSeleccionado.IdConsorcista_755ME);
+                _unidadConsorcistaBLL.QuitarPropietario_755ME(unidad.IdUnidadFuncional_755ME, _consorcistaSeleccionado.IdConsorcista_755ME);
                 CargarUnidadesDelConsorcista_755ME();
             }
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message, Text);
             }
+        }
+
+        // ---------- Proveedores ----------
+
+        private void CargarProveedores_755ME()
+        {
+            dgvProveedores.Rows.Clear();
+            foreach (ProveedorBE_755ME p in _proveedorBLL.ObtenerTodos_755ME())
+            {
+                int fila = dgvProveedores.Rows.Add(p.Nombre_755ME, p.Habilitado_755ME ? "Si" : "No");
+                dgvProveedores.Rows[fila].Tag = p;
+            }
+            // Rows.Add selecciona la fila antes de que tenga Tag, se reevalua aca
+            dgvProveedores_SelectionChanged(dgvProveedores, EventArgs.Empty);
+        }
+
+        private void dgvProveedores_SelectionChanged(object sender, EventArgs e)
+        {
+            // solo cuenta la fila que elige el usuario, no la que la grilla selecciona sola al cargar
+            if (!dgvProveedores.Focused || dgvProveedores.SelectedRows.Count == 0 || dgvProveedores.SelectedRows[0].Tag == null)
+            {
+                LimpiarDetalleProveedor_755ME();
+                return;
+            }
+            _proveedorSeleccionado = (ProveedorBE_755ME)dgvProveedores.SelectedRows[0].Tag!;
+            txtNombreProveedor.Text = _proveedorSeleccionado.Nombre_755ME;
+            btnInhabilitarProveedor.Enabled = _proveedorSeleccionado.Habilitado_755ME;
+            btnHabilitarProveedor.Enabled = !_proveedorSeleccionado.Habilitado_755ME;
+        }
+
+        private void btnNuevoProveedor_Click(object sender, EventArgs e)
+        {
+            dgvProveedores.ClearSelection();
+            LimpiarDetalleProveedor_755ME();
+        }
+
+        private void LimpiarDetalleProveedor_755ME()
+        {
+            _proveedorSeleccionado = null;
+            txtNombreProveedor.Clear();
+            btnInhabilitarProveedor.Enabled = false;
+            btnHabilitarProveedor.Enabled = false;
+        }
+
+        private void btnGuardarProveedor_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ProveedorBE_755ME proveedor = _proveedorSeleccionado ?? new ProveedorBE_755ME();
+                proveedor.Nombre_755ME = txtNombreProveedor.Text;
+                _proveedorBLL.GuardarProveedor_755ME(proveedor);
+                MessageBox.Show("Guardado", Text);
+                CargarProveedores_755ME();
+                LimpiarDetalleProveedor_755ME();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Text);
+            }
+        }
+
+        private void btnInhabilitarProveedor_Click(object sender, EventArgs e)
+        {
+            if (_proveedorSeleccionado == null) return;
+            _proveedorBLL.InhabilitarProveedor_755ME(_proveedorSeleccionado.IdProveedor_755ME);
+            CargarProveedores_755ME();
+            LimpiarDetalleProveedor_755ME();
+        }
+
+        private void btnHabilitarProveedor_Click(object sender, EventArgs e)
+        {
+            if (_proveedorSeleccionado == null) return;
+            _proveedorBLL.HabilitarProveedor_755ME(_proveedorSeleccionado.IdProveedor_755ME);
+            CargarProveedores_755ME();
+            LimpiarDetalleProveedor_755ME();
         }
 
         public void ActualizarIdioma(IIdioma idioma)

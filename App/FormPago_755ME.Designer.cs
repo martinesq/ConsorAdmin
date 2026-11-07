@@ -92,6 +92,8 @@ namespace AppBase
             lblSinConsorcios.ForeColor = System.Drawing.Color.DarkRed;
             lblSinConsorcios.Location = new System.Drawing.Point(110, 45);
             lblSinConsorcios.Name = "lblSinConsorcios";
+            lblSinConsorcios.Tag = "lb_sin_consorcios";
+            lblSinConsorcios.Text = "No tiene consorcios asignados";
             lblSinConsorcios.Size = new System.Drawing.Size(0, 15);
             lblSinConsorcios.TabIndex = 4;
             //

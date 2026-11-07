@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 namespace AppBase
 {
-    // se abre en lugar del sistema cuando falla la integridad y entra un admin global
     // no se puede cerrar sin elegir una accion
     public partial class frmIntegridad : Form
     {
@@ -75,7 +74,6 @@ namespace AppBase
             }
         }
 
-        // si la integridad queda OK el admin sigue en la sesion, si no se queda en este formulario
         private void Ejecutar(Func<ResultadoIntegridad> accion, string mensajeError)
         {
             try

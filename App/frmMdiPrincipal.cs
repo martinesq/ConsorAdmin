@@ -41,7 +41,6 @@ namespace AppBase
         {
             Actualizar();
         }
-        // se cierra sobre una copia porque Close() modifica MdiChildren
         private void CerrarHijosMdi()
         {
             Form[] hijos = new Form[this.MdiChildren.Length];
@@ -53,135 +52,56 @@ namespace AppBase
         }
         public void Actualizar()
         {
-            // se itera sobre una copia porque el menu se reordena con el merge de los hijos MDI
             ToolStripItem[] itemsMenu = new ToolStripItem[menuPrincipal.Items.Count];
             menuPrincipal.Items.CopyTo(itemsMenu, 0);
-            mnuAnularExpensa_755ME.Enabled = false;
-            mnuRegistrarPago_755ME.Enabled = false;
-            mnuObtenerMorosidad_755ME.Enabled = false;
-            mnuGenerarLiquidacion_755ME.Enabled = false;
-            mnuEmitirEstadoCuenta_755ME.Enabled = false;
-            mnuGenerarOrdenPago_755ME.Enabled = false;
-            mnuRegistrarEgreso_755ME.Enabled = false;
-            mnuRevisarComposicion_755ME.Enabled = false;
-            mnuObtenerEstadoFondo_755ME.Enabled = false;
-            mnuGestGastos_755ME.Enabled = false;
-            foreach (ToolStripItem c in itemsMenu)
-            {
-                if (c.Name != "sesiónToolStripMenuItem" && c.Name != "idiomaToolStripMenuItem")
-                {
-                    c.Visible = false;
-                }
-            }
             if (SessionManager.EstaLogueado())
             {
                 _usuario = _userBLL.CargarUsuario();
                 iniciarSesiónToolStripMenuItem.Enabled = false;
                 cerrarSesiónToolStripMenuItem.Enabled = true;
-
-                foreach (PermisoCompuesto p in _usuario.Permisos)
-                {
-                    ValidarPermisos(p);
-                }
             }
             else
             {
                 iniciarSesiónToolStripMenuItem.Enabled = true;
                 cerrarSesiónToolStripMenuItem.Enabled = false;
             }
+            HashSet<string> permitidos = ObtenerNombresDePermisos_755ME();
+            foreach (ToolStripItem c in itemsMenu)
+            {
+                if (c.Name != "sesiónToolStripMenuItem" && c.Name != "idiomaToolStripMenuItem")
+                {
+                    AplicarPermisos_755ME(c, permitidos, false);
+                }
+            }
             ActualizarIdioma(SessionManager.Idioma);
             CargarIdiomas();
         }
-        private void ValidarPermisos(PermisoCompuesto p)
+        private HashSet<string> ObtenerNombresDePermisos_755ME()
         {
-            if (p is Familia)
+            List<IPermiso> permisos = new List<IPermiso>();
+            if (SessionManager.EstaLogueado())
             {
-                foreach (PermisoCompuesto h in p.ObtenerHijos)
+                foreach (PermisoCompuesto p in _usuario.Permisos)
                 {
-                    ValidarPermisos(h);
+                    p.AgregarPermisosEn_755ME(permisos);
                 }
             }
-            //--------Familias
-            if (p.Permiso == TipoPatente.GestPermisos)
+            return new HashSet<string>(permisos.Select(p => p.Nombre));
+        }
+
+        private bool AplicarPermisos_755ME(ToolStripItem item, HashSet<string> permitidos, bool padrePermitido)
+        {
+            bool permitido = padrePermitido || permitidos.Contains(item.Name);
+            bool hijoVisible = false;
+            if (item is ToolStripMenuItem menu)
             {
-                familiasToolStripMenuItem.Visible = true;
+                foreach (ToolStripItem hijo in menu.DropDownItems)
+                {
+                    if (AplicarPermisos_755ME(hijo, permitidos, permitido)) hijoVisible = true;
+                }
             }
-            //--------Usuarios
-            if (p.Permiso == TipoPatente.GestUsuarios)
-            {
-                usuariosToolStripMenuItem.Visible = true;
-            }
-            //--------Editar Idioma
-            if (p.Permiso == TipoPatente.GestIdiomas)
-            {
-                nuevoIdiomaToolStripMenuItem.Visible = true;
-            }
-            //--------Base de Datos // Backup y Restore
-            if (p.Permiso == TipoPatente.GestBackup)
-            {
-                baseDeDatosToolStripMenuItem.Visible = true;
-            }
-            //--------Bitacora
-            if (p.Permiso == TipoPatente.GestBitacora)
-            {
-                bitacoraToolStripMenuItem.Visible = true;
-            }
-            //--------Liquidacion de Expensas (PN01)
-            if (p.Permiso == TipoPatente.AnularExpensa_755ME)
-            {
-                mnuAnularExpensa_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.RegistrarPago_755ME)
-            {
-                mnuRegistrarPago_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.ObtenerMorosidad_755ME)
-            {
-                mnuObtenerMorosidad_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.GenerarLiquidacion_755ME)
-            {
-                mnuGenerarLiquidacion_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.EmitirEstadoCuenta_755ME)
-            {
-                mnuEmitirEstadoCuenta_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.GenerarOrdenPago_755ME)
-            {
-                mnuGenerarOrdenPago_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.RegistrarEgreso_755ME)
-            {
-                mnuRegistrarEgreso_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.RevisarComposicion_755ME)
-            {
-                mnuRevisarComposicion_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.ObtenerEstadoFondo_755ME)
-            {
-                mnuObtenerEstadoFondo_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            if (p.Permiso == TipoPatente.GestGastos_755ME)
-            {
-                mnuGestGastos_755ME.Enabled = true;
-                mnuLiquidacionExpensas_755ME.Visible = true;
-            }
-            //--------Mantenimiento de consorcios (solo Administrador global)
-            if (p.Permiso == TipoPatente.GestMantenimientoConsorcios_755ME)
-            {
-                mnuMantenimientoConsorcios_755ME.Visible = true;
-            }
+            item.Visible = permitido || hijoVisible;
+            return permitido || hijoVisible;
         }
 
         private void EditarFamilias(object sender, EventArgs e)
@@ -227,12 +147,7 @@ namespace AppBase
 
         private void mnuAnularExpensa_755ME_Click(object sender, EventArgs e)
         {
-            AbrirHijo(new FormExpensa_755ME(abrirEnComposicion: false));
-        }
-
-        private void mnuRevisarComposicion_755ME_Click(object sender, EventArgs e)
-        {
-            AbrirHijo(new FormExpensa_755ME(abrirEnComposicion: true));
+            AbrirHijo(new FormExpensa_755ME());
         }
 
         private void mnuRegistrarPago_755ME_Click(object sender, EventArgs e)
@@ -240,19 +155,9 @@ namespace AppBase
             AbrirHijo(new FormPago_755ME());
         }
 
-        private void mnuObtenerMorosidad_755ME_Click(object sender, EventArgs e)
-        {
-            AbrirHijo(new FormMorosidad_755ME());
-        }
-
         private void mnuGenerarLiquidacion_755ME_Click(object sender, EventArgs e)
         {
             AbrirHijo(new FormLiquidacion_755ME());
-        }
-
-        private void mnuEmitirEstadoCuenta_755ME_Click(object sender, EventArgs e)
-        {
-            AbrirHijo(new FormEstadoCuenta_755ME());
         }
 
         private void mnuGenerarOrdenPago_755ME_Click(object sender, EventArgs e)
@@ -265,9 +170,9 @@ namespace AppBase
             AbrirHijo(new FormEgreso_755ME());
         }
 
-        private void mnuObtenerEstadoFondo_755ME_Click(object sender, EventArgs e)
+        private void mnuReporteGestion_755ME_Click(object sender, EventArgs e)
         {
-            AbrirHijo(new FormFondo_755ME());
+            AbrirHijo(new FormReporteGestion_755ME());
         }
 
         private void mnuGestGastos_755ME_Click(object sender, EventArgs e)
@@ -275,10 +180,46 @@ namespace AppBase
             AbrirHijo(new FormGasto_755ME());
         }
 
+        private void mnuFormalizarSolicitud_755ME_Click(object sender, EventArgs e)
+        {
+            AbrirHijo(new FormSolicitudServicio_755ME());
+        }
+
+        private void mnuAsignarProveedor_755ME_Click(object sender, EventArgs e)
+        {
+            AbrirHijo(new FormAsignacionProveedor_755ME());
+        }
+
+        private void mnuCargarPrestacion_755ME_Click(object sender, EventArgs e)
+        {
+            AbrirHijo(new FormPrestacion_755ME());
+        }
+
+        private void mnuAprobarPrestacion_755ME_Click(object sender, EventArgs e)
+        {
+            AbrirHijo(new FormAprobacionPrestacion_755ME());
+        }
+
         private void AbrirMantenimientoConsorcios_755ME(object sender, EventArgs e)
         {
             // se abre con barra de titulo, como Usuarios/Familias
             FormMantenimientoConsorcios_755ME f = new FormMantenimientoConsorcios_755ME();
+            f.MdiParent = this;
+            f.WindowState = FormWindowState.Maximized;
+            f.Show();
+        }
+
+        private void AbrirReporteServicios_755ME(object sender, EventArgs e)
+        {
+            FormReporteServiciosPN02_755ME f = new FormReporteServiciosPN02_755ME();
+            f.MdiParent = this;
+            f.WindowState = FormWindowState.Maximized;
+            f.Show();
+        }
+
+        private void AbrirSerializacionExpensas_755ME(object sender, EventArgs e)
+        {
+            FormSerializacion_755ME f = new FormSerializacion_755ME();
             f.MdiParent = this;
             f.WindowState = FormWindowState.Maximized;
             f.Show();
@@ -342,7 +283,6 @@ namespace AppBase
                 {
                     control.Text = mTraducciones[control.Tag.ToString()].Texto;
                 }
-                // las columnas del DataGridView no son Control, se traducen aparte
                 if (control is DataGridView grilla)
                 {
                     foreach (DataGridViewColumn columna in grilla.Columns)
@@ -382,7 +322,6 @@ namespace AppBase
         }
         private void idioma_Click(object sender, EventArgs e)
         {
-            // CambiarIdioma avisa a todos los formularios abiertos (observers), incluido este
             SessionManager.CambiarIdioma((IIdioma)((ToolStripMenuItem)sender).Tag);
             MarcarIdioma();
         }

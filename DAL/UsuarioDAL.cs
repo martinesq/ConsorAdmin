@@ -45,7 +45,6 @@ namespace DAL
             u.Estado = TipoEstado.SinCambios;
             u2 = u;
         }
-        // actualiza solo el DVH con SQL directo, sin pasar por Sincronizar()
         public void ActualizarDVH(Guid id, int dvh)
         {
             _dAO.EjecutarQuery("UPDATE Usuario SET Usuario_DVH=" + dvh + " WHERE Usuario_ID='" + id + "'");

@@ -14,6 +14,7 @@ namespace DAL
             c.Apellido_755ME = fila["Apellido"].ToString() ?? "";
             c.DNI_755ME = fila["DNI"].ToString() ?? "";
             c.Activo_755ME = fila.Table.Columns.Contains("Activo") && Convert.ToBoolean(fila["Activo"]);
+            c.DVH = fila["DVH"] == DBNull.Value ? 0 : Convert.ToInt32(fila["DVH"]);
             return c;
         }
 
@@ -25,27 +26,46 @@ namespace DAL
             return lista;
         }
 
-        public int Insertar_755ME(ConsorcistaBE_755ME consorcista)
+        public ConsorcistaBE_755ME ObtenerPorId_755ME(int idConsorcista)
         {
+            DataTable tabla = AccesoDatos_755ME.Consultar_755ME("SELECT * FROM CONSORCISTA WHERE IdConsorcista=@id",
+                AccesoDatos_755ME.Parametro_755ME("@id", idConsorcista));
+            if (tabla.Rows.Count == 0) throw new InvalidOperationException("No existe el consorcista " + idConsorcista);
+            return Mapear_755ME(tabla.Rows[0]);
+        }
+
+        public int Insertar_755ME(ConsorcistaBE_755ME consorcista, int dvh)
+        {
+            consorcista.DVH = dvh;
             consorcista.IdConsorcista_755ME = AccesoDatos_755ME.Insertar_755ME(
-                "INSERT INTO CONSORCISTA (Nombre, Apellido, DNI, Activo) VALUES (@nom, @ape, @dni, @activo)",
+                "INSERT INTO CONSORCISTA (Nombre, Apellido, DNI, Activo, DVH) VALUES (@nom, @ape, @dni, @activo, @dvh)",
                 AccesoDatos_755ME.Parametro_755ME("@nom", consorcista.Nombre_755ME), AccesoDatos_755ME.Parametro_755ME("@ape", consorcista.Apellido_755ME),
-                AccesoDatos_755ME.Parametro_755ME("@dni", consorcista.DNI_755ME), AccesoDatos_755ME.Parametro_755ME("@activo", consorcista.Activo_755ME));
+                AccesoDatos_755ME.Parametro_755ME("@dni", consorcista.DNI_755ME), AccesoDatos_755ME.Parametro_755ME("@activo", consorcista.Activo_755ME),
+                AccesoDatos_755ME.Parametro_755ME("@dvh", dvh));
             return consorcista.IdConsorcista_755ME;
         }
 
-        public void Actualizar_755ME(ConsorcistaBE_755ME consorcista)
+        public void Actualizar_755ME(ConsorcistaBE_755ME consorcista, int dvh)
         {
+            consorcista.DVH = dvh;
             AccesoDatos_755ME.EjecutarNoQuery_755ME(
-                "UPDATE CONSORCISTA SET Nombre=@nom, Apellido=@ape, DNI=@dni WHERE IdConsorcista=@id",
+                "UPDATE CONSORCISTA SET Nombre=@nom, Apellido=@ape, DNI=@dni, DVH=@dvh WHERE IdConsorcista=@id",
                 AccesoDatos_755ME.Parametro_755ME("@nom", consorcista.Nombre_755ME), AccesoDatos_755ME.Parametro_755ME("@ape", consorcista.Apellido_755ME),
-                AccesoDatos_755ME.Parametro_755ME("@dni", consorcista.DNI_755ME), AccesoDatos_755ME.Parametro_755ME("@id", consorcista.IdConsorcista_755ME));
+                AccesoDatos_755ME.Parametro_755ME("@dni", consorcista.DNI_755ME), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh),
+                AccesoDatos_755ME.Parametro_755ME("@id", consorcista.IdConsorcista_755ME));
         }
 
-        public void ActualizarActivo_755ME(int idConsorcista, bool activo)
+        public void ActualizarActivo_755ME(int idConsorcista, bool activo, int dvh)
         {
-            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE CONSORCISTA SET Activo=@activo WHERE IdConsorcista=@id",
-                AccesoDatos_755ME.Parametro_755ME("@activo", activo), AccesoDatos_755ME.Parametro_755ME("@id", idConsorcista));
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE CONSORCISTA SET Activo=@activo, DVH=@dvh WHERE IdConsorcista=@id",
+                AccesoDatos_755ME.Parametro_755ME("@activo", activo), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh),
+                AccesoDatos_755ME.Parametro_755ME("@id", idConsorcista));
+        }
+
+        public void ActualizarDvh_755ME(int idConsorcista, int dvh)
+        {
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE CONSORCISTA SET DVH=@dvh WHERE IdConsorcista=@id",
+                AccesoDatos_755ME.Parametro_755ME("@dvh", dvh), AccesoDatos_755ME.Parametro_755ME("@id", idConsorcista));
         }
 
         // no se puede dar de baja un consorcista propietario de una unidad activa

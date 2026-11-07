@@ -3,8 +3,10 @@ using System;
 
 namespace BE
 {
-    public class Bitacora : Entity, IBitacora
+    public class Bitacora : Entity, IBitacora, IVerificable
     {
+        private static readonly string[] _atributosVerificables = { "FechaHora", "UsuarioId", "Actividad", "EntidadId", "Detalle" };
+
         public Bitacora()
         {
             FechaHora = DateTime.Now;
@@ -24,7 +26,9 @@ namespace BE
         public string Actividad { get; set; }
         public string EntidadId { get; set; }
         public string Detalle { get; set; }
-        // se completa al cargar desde la DAL (join con Usuario), no es una columna
         public string UsuarioEmail { get; set; } = "";
+        public int DVH { get; set; }
+        public string NombreTabla { get { return "Bitacora"; } }
+        public string[] AtributosVerificables { get { return _atributosVerificables; } }
     }
 }

@@ -10,6 +10,7 @@ namespace AppBase
     public partial class FormGasto_755ME : Form, IIdiomaObserver
     {
         private readonly GastoBLL_755ME _bll = new GastoBLL_755ME();
+        private readonly ConsorcioBLL_755ME _consorcioBLL = new ConsorcioBLL_755ME();
         private int _idConsorcioSeleccionado;
 
         public FormGasto_755ME()
@@ -21,12 +22,11 @@ namespace AppBase
         {
             SessionManager.AgregarObservador(this);
             ActualizarIdioma(SessionManager.Idioma);
-            List<ConsorcioBE_755ME> consorcios = _bll.ObtenerConsorciosAsignados_755ME();
+            List<ConsorcioBE_755ME> consorcios = _consorcioBLL.ObtenerConsorciosAsignados_755ME();
             cboConsorcio.DisplayMember = "Nombre_755ME";
             cboConsorcio.DataSource = consorcios;
             bool sinConsorcios = consorcios.Count == 0;
             lblSinConsorcios.Visible = sinConsorcios;
-            lblSinConsorcios.Text = sinConsorcios ? "No tiene consorcios asignados" : "";
             cboConsorcio.Enabled = !sinConsorcios;
         }
 

@@ -7,7 +7,6 @@ namespace BLL
     public class DiscrepanciaIntegridad
     {
         public string Tabla { get; set; }
-        // null si la discrepancia es del DVV (afecta a toda la tabla)
         public Guid? FilaId { get; set; }
         public bool ErrorHorizontal { get; set; }
         public bool ErrorVertical { get; set; }

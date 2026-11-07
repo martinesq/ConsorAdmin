@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace BLL
 {
-    // acciones del admin global ante una falla de integridad: Restaurar, Recalcular o Cancelar (quedan en la bitacora)
     public class ResolucionIntegridadBLL
     {
         VerificadorBLL _verificador;
@@ -28,7 +27,6 @@ namespace BLL
             return _verificador.VerificarIntegridadSistema();
         }
 
-        // despues de restaurar puede no existir el admin de la sesion: en ese caso se invalida la sesion
         public ResultadoIntegridad Restaurar(string rutaBackup, ResultadoIntegridad problemas)
         {
             Usuario admin = ExigirAdministradorGlobal();
@@ -56,7 +54,6 @@ namespace BLL
             return resultado;
         }
 
-        // el admin decide que el dato actual es valido: guarda los nuevos DVH/DVV sin tocar los datos
         public ResultadoIntegridad Recalcular(ResultadoIntegridad problemas)
         {
             Usuario admin = ExigirAdministradorGlobal();

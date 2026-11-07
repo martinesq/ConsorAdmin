@@ -9,6 +9,8 @@ namespace AppBase
     public partial class FormPago_755ME : Form, IIdiomaObserver
     {
         private readonly PagoBLL_755ME _bll = new PagoBLL_755ME();
+        private readonly ConsorcioBLL_755ME _consorcioBLL = new ConsorcioBLL_755ME();
+        private readonly UnidadFuncionalBLL_755ME _ufBLL = new UnidadFuncionalBLL_755ME();
         private ExpensaBE_755ME? _expensaPendiente;
 
         public FormPago_755ME()
@@ -20,12 +22,11 @@ namespace AppBase
         {
             SessionManager.AgregarObservador(this);
             ActualizarIdioma(SessionManager.Idioma);
-            List<ConsorcioBE_755ME> consorcios = _bll.ObtenerConsorciosAsignados_755ME();
+            List<ConsorcioBE_755ME> consorcios = _consorcioBLL.ObtenerConsorciosAsignados_755ME();
             cboConsorcio.DisplayMember = "Nombre_755ME";
             cboConsorcio.DataSource = consorcios;
             bool sinConsorcios = consorcios.Count == 0;
             lblSinConsorcios.Visible = sinConsorcios;
-            lblSinConsorcios.Text = sinConsorcios ? "No tiene consorcios asignados" : "";
             cboConsorcio.Enabled = !sinConsorcios;
         }
 
@@ -36,7 +37,7 @@ namespace AppBase
             LimpiarExpensa_755ME();
             if (cboConsorcio.SelectedItem is not ConsorcioBE_755ME consorcio) return;
 
-            List<UnidadFuncionalBE_755ME> unidades = _bll.ObtenerUnidades_755ME(consorcio.IdConsorcio_755ME);
+            List<UnidadFuncionalBE_755ME> unidades = _ufBLL.ObtenerUnidadesActivas_755ME(consorcio.IdConsorcio_755ME);
             cboUnidad.DisplayMember = "Numero_755ME";
             cboUnidad.DataSource = unidades;
             cboUnidad.Enabled = unidades.Count > 0;

@@ -13,9 +13,7 @@ namespace INT
         UsuarioValido,
         UsuarioBloqueado,
         UsuarioBaja,
-        // credencial valida pero integridad fallida (usuario comun): no inicia sesion
         SistemaNoDisponible,
-        // integridad fallida y admin global: sesion solo para resolver la integridad
         IntegridadRequiereResolucion,
     }
 }

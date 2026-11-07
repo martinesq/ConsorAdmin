@@ -1,5 +1,6 @@
 ﻿using BE;
 using DAL;
+using SER;
 
 namespace BLL
 {
@@ -9,11 +10,8 @@ namespace BLL
         // recargo por mora: 10% de la deuda vencida del periodo anterior
         private const decimal PorcentajeRecargoPorMora_755ME = 0.10m;
 
-        private readonly ConsorcioDAL_755ME _consorcioDAL = new ConsorcioDAL_755ME();
         private readonly ExpensaDAL_755ME _expensaDAL = new ExpensaDAL_755ME();
-        private readonly PagoDAL_755ME _pagoDAL = new PagoDAL_755ME();
-        private readonly GastoDAL_755ME _gastoDAL = new GastoDAL_755ME();
-        private readonly UnidadFuncionalDAL_755ME _ufDAL = new UnidadFuncionalDAL_755ME();
+        private readonly UnidadFuncionalBLL_755ME _ufBLL = new UnidadFuncionalBLL_755ME();
         private readonly VerificadorBLL _verificador = new VerificadorBLL();
         private readonly BitacoraBLL _bitacora = new BitacoraBLL();
 
@@ -35,9 +33,44 @@ namespace BLL
             ActualizarDvvExpensa_755ME();
         }
 
-        public List<ConsorcioBE_755ME> ObtenerConsorciosAsignados_755ME()
+        // PagoBLL y GastoBLL se crean dentro de cada metodo porque tambien usan esta BLL
+
+        public ExpensaBE_755ME ObtenerPorId_755ME(int idExpensa)
         {
-            return _consorcioDAL.ObtenerConsorciosConUnidadesActivas_755ME();
+            return _expensaDAL.ObtenerPorId_755ME(idExpensa);
+        }
+
+        public List<ExpensaBE_755ME> ObtenerExpensasPendientes_755ME(int idUF)
+        {
+            return _expensaDAL.ObtenerExpensasPendientes_755ME(idUF);
+        }
+
+        public List<DateTime> ObtenerPeriodosLiquidados_755ME(int idConsorcio)
+        {
+            return _expensaDAL.ObtenerPeriodosLiquidados_755ME(idConsorcio);
+        }
+
+        // ---------- CU004 ----------
+
+        public List<UnidadFuncionalBE_755ME> ObtenerUnidadesConExpensaSinOrden_755ME(int idConsorcio)
+        {
+            return _expensaDAL.ObtenerUnidadesConExpensaSinOrden_755ME(idConsorcio);
+        }
+
+        public ExpensaBE_755ME ObtenerExpensaLiquidada_755ME(int idUF)
+        {
+            return _expensaDAL.ObtenerExpensaLiquidada_755ME(idUF);
+        }
+
+        // cambia el estado y recalcula el DVH
+        public ExpensaBE_755ME ActualizarEstado_755ME(int idExpensa, string estado)
+        {
+            ExpensaBE_755ME expensa = _expensaDAL.ObtenerPorId_755ME(idExpensa);
+            expensa.Estado_755ME = estado;
+            expensa.DVH = _verificador.CalcularDVH(expensa);
+            _expensaDAL.ActualizarEstado_755ME(idExpensa, estado, expensa.DVH);
+            ActualizarDvvExpensa_755ME();
+            return expensa;
         }
 
         // ---------- CU001: Anular Expensa ----------
@@ -48,13 +81,27 @@ namespace BLL
             return _expensaDAL.ObtenerExpensasPendientesOVencidas_755ME(idConsorcio);
         }
 
+        public void ExportarExpensas_755ME(int idConsorcio, string ruta)
+        {
+            var expensas = ObtenerExpensasAnulables_755ME(idConsorcio);
+            var servicioSerializacion = new SerializacionService_755ME();
+            servicioSerializacion.Serializar_755ME(expensas, ruta);
+        }
+
+        // solo lee el archivo: no escribe nada en la base
+        public List<ExpensaBE_755ME> ImportarExpensas_755ME(string ruta)
+        {
+            var servicioSerializacion = new SerializacionService_755ME();
+            return servicioSerializacion.Deserializar_755ME<List<ExpensaBE_755ME>>(ruta);
+        }
+
         public ExpensaBE_755ME AnularExpensa_755ME(int idExpensa, string motivo)
         {
             if (string.IsNullOrWhiteSpace(motivo))
             {
                 throw new ArgumentException("Debe indicar un motivo");
             }
-            if (_pagoDAL.TienePagosImputados_755ME(idExpensa))
+            if (new PagoBLL_755ME().TienePagosImputados_755ME(idExpensa))
             {
                 throw new InvalidOperationException("No se puede anular una expensa con pagos imputados");
             }
@@ -74,7 +121,8 @@ namespace BLL
         {
             ActualizarExpensasVencidas_755ME();
             List<ExpensaBE_755ME> vencidas = _expensaDAL.ObtenerExpensasVencidasImpagas_755ME(idConsorcio);
-            Dictionary<int, string> numeros = _ufDAL.ObtenerUnidadesActivas_755ME(idConsorcio).ToDictionary(u => u.IdUnidadFuncional_755ME, u => u.Numero_755ME);
+            PagoBLL_755ME pagoBLL = new PagoBLL_755ME();
+            Dictionary<int, string> numeros = _ufBLL.ObtenerUnidadesActivas_755ME(idConsorcio).ToDictionary(u => u.IdUnidadFuncional_755ME, u => u.Numero_755ME);
             List<UnidadMorosaBE_755ME> resultado = new List<UnidadMorosaBE_755ME>();
             foreach (var grupo in vencidas.GroupBy(e => e.IdUnidadFuncional_755ME))
             {
@@ -83,7 +131,7 @@ namespace BLL
                 List<ExpensaAdeudadaBE_755ME> detalle = new List<ExpensaAdeudadaBE_755ME>();
                 foreach (ExpensaBE_755ME e in grupo.OrderBy(x => x.Periodo_755ME))
                 {
-                    decimal pagado = _pagoDAL.ObtenerPorExpensa_755ME(e.IdExpensa_755ME).Sum(p => p.Monto_755ME);
+                    decimal pagado = pagoBLL.ObtenerPorExpensa_755ME(e.IdExpensa_755ME).Sum(p => p.Monto_755ME);
                     decimal saldo = e.Monto_755ME - pagado;
                     adeudado += saldo;
                     int dias = (int)(DateTime.Now.Date - e.FechaVencimiento_755ME.Date).TotalDays;
@@ -115,17 +163,12 @@ namespace BLL
 
         // ---------- CU004: Generar liquidacion de expensas ----------
 
-        public List<DateTime> ObtenerPeriodosSinLiquidar_755ME(int idConsorcio)
-        {
-            return _gastoDAL.ObtenerPeriodosConGastos_755ME(idConsorcio);
-        }
-
         public decimal PrepararLiquidacion_755ME(int idConsorcio, DateTime periodo)
         {
             ActualizarExpensasVencidas_755ME();
             _idConsorcioEnCurso = idConsorcio;
             _periodoEnCurso = periodo;
-            return _gastoDAL.ObtenerGastosPorPeriodo_755ME(periodo).Where(g => g.IdConsorcio_755ME == idConsorcio).Sum(g => g.Monto_755ME);
+            return new GastoBLL_755ME().ObtenerGastosPorPeriodo_755ME(periodo).Where(g => g.IdConsorcio_755ME == idConsorcio).Sum(g => g.Monto_755ME);
         }
 
         // vencimiento minimo para liquidar: despues de fin de periodo, no antes de hoy ni del vencimiento de periodos previos
@@ -157,17 +200,18 @@ namespace BLL
                 throw new ArgumentException("La fecha de vencimiento no puede ser anterior al " + minimo.ToString("dd/MM/yyyy") +
                     " (posterior al fin del periodo y no anterior al vencimiento de periodos previos)");
             }
-            List<UnidadFuncionalBE_755ME> unidades = _ufDAL.ObtenerUnidadesActivas_755ME(_idConsorcioEnCurso);
+            List<UnidadFuncionalBE_755ME> unidades = _ufBLL.ObtenerUnidadesActivas_755ME(_idConsorcioEnCurso);
             List<ExpensaBE_755ME> deudaAnterior = _expensaDAL.ObtenerDeudaVencidaPeriodoAnterior_755ME(_idConsorcioEnCurso, _periodoEnCurso);
-            _totalGastosEnCurso = _gastoDAL.ObtenerGastosPorPeriodo_755ME(_periodoEnCurso).Where(g => g.IdConsorcio_755ME == _idConsorcioEnCurso).Sum(g => g.Monto_755ME);
+            _totalGastosEnCurso = new GastoBLL_755ME().ObtenerGastosPorPeriodo_755ME(_periodoEnCurso).Where(g => g.IdConsorcio_755ME == _idConsorcioEnCurso).Sum(g => g.Monto_755ME);
 
+            PagoBLL_755ME pagoBLL = new PagoBLL_755ME();
             List<ExpensaBE_755ME> expensas = new List<ExpensaBE_755ME>();
             foreach (UnidadFuncionalBE_755ME uf in unidades)
             {
                 decimal deudaVencidaUF = 0;
                 foreach (ExpensaBE_755ME pendiente in deudaAnterior.Where(e => e.IdUnidadFuncional_755ME == uf.IdUnidadFuncional_755ME))
                 {
-                    decimal pagado = _pagoDAL.ObtenerPorExpensa_755ME(pendiente.IdExpensa_755ME).Sum(p => p.Monto_755ME);
+                    decimal pagado = pagoBLL.ObtenerPorExpensa_755ME(pendiente.IdExpensa_755ME).Sum(p => p.Monto_755ME);
                     deudaVencidaUF += pendiente.Monto_755ME - pagado;
                 }
                 // redondea a 2 decimales para que el DVH coincida al releer de la base
@@ -220,20 +264,31 @@ namespace BLL
 
         // ---------- CU008: Revisar composicion de expensa ----------
 
-        public List<UnidadFuncionalBE_755ME> ObtenerUnidades_755ME(int idConsorcio)
-        {
-            return _ufDAL.ObtenerUnidadesActivas_755ME(idConsorcio);
-        }
-
         public List<ExpensaBE_755ME> ObtenerExpensasLiquidadas_755ME(int idUF)
         {
             ActualizarExpensasVencidas_755ME();
             return _expensaDAL.ObtenerExpensasLiquidadas_755ME(idUF);
         }
 
+        // no hay tabla de detalle: los gastos son los del consorcio en el periodo de la expensa
         public ComposicionExpensaBE_755ME ObtenerComposicion_755ME(int idExpensa)
         {
-            return _expensaDAL.ObtenerComposicion_755ME(idExpensa);
+            ExpensaBE_755ME expensa = _expensaDAL.ObtenerPorId_755ME(idExpensa);
+            int idConsorcio = _ufBLL.ObtenerPorId_755ME(expensa.IdUnidadFuncional_755ME).IdConsorcio_755ME;
+            return new ComposicionExpensaBE_755ME
+            {
+                Gastos_755ME = new GastoBLL_755ME().ObtenerGastosPorPeriodo_755ME(expensa.Periodo_755ME)
+                    .Where(g => g.IdConsorcio_755ME == idConsorcio).ToList(),
+                HonorarioAplicado_755ME = expensa.HonorarioAplicado_755ME,
+                Coeficiente_755ME = expensa.CoeficienteAplicado_755ME,
+                RecargoPorMora_755ME = expensa.RecargoPorMora_755ME
+            };
+        }
+
+        // id >= 0: unidad funcional, id < 0: todo el consorcio (-idConsorcio)
+        public List<ExpensaBE_755ME> ObtenerExpensas_755ME(int id)
+        {
+            return _expensaDAL.ObtenerExpensas_755ME(id);
         }
     }
 }

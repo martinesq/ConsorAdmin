@@ -35,11 +35,32 @@ namespace BLL
         }
         public PermisoCompuesto GuardarPermiso(PermisoCompuesto p, bool esfamilia)
         {
-            return mPermiso.GuardarPermiso(p, esfamilia);
+            VerificadorBLL verificador = new VerificadorBLL();
+            verificador.ActualizarDVH(p);
+            mPermiso.GuardarPermiso(p, esfamilia);
+            verificador.ActualizarDVV("Permiso", mPermiso.ObtenerDiccionario().Values.Cast<IVerificable>().ToList());
+            return p;
         }
         public void GuardarFamilia(Familia f)
         {
             mPermiso.ActualizarFamilia(f);
+            VerificadorBLL verificador = new VerificadorBLL();
+            List<FamiliaPatenteBE_755ME> filas = mPermiso.ObtenerFamiliaPatente();
+            foreach (FamiliaPatenteBE_755ME fila in filas.Where(x => x.PadreId == f.Id))
+            {
+                mPermiso.ActualizarDvhFamiliaPatente(fila.PadreId, fila.HijoId, verificador.CalcularDVH(fila));
+            }
+            verificador.ActualizarDVV("Familia_Patente", filas.Cast<IVerificable>().ToList());
+        }
+        public void ActualizarDvhPermisosDeUsuario(Guid usuarioId)
+        {
+            VerificadorBLL verificador = new VerificadorBLL();
+            List<UsuarioPermisoBE_755ME> filas = mPermiso.ObtenerUsuarioPermiso();
+            foreach (UsuarioPermisoBE_755ME fila in filas.Where(x => x.UsuarioId == usuarioId))
+            {
+                mPermiso.ActualizarDvhUsuarioPermiso(fila.PermisoId, fila.UsuarioId, verificador.CalcularDVH(fila));
+            }
+            verificador.ActualizarDVV("Usuario_Permiso", filas.Cast<IVerificable>().ToList());
         }
         public IList<Patente> ObtenerTodasLasPatentes()
         {

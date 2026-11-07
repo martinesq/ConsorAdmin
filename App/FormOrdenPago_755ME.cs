@@ -9,6 +9,8 @@ namespace AppBase
     public partial class FormOrdenPago_755ME : Form, IIdiomaObserver
     {
         private readonly OrdenPagoBLL_755ME _bll = new OrdenPagoBLL_755ME();
+        private readonly ConsorcioBLL_755ME _consorcioBLL = new ConsorcioBLL_755ME();
+        private readonly ExpensaBLL_755ME _expensaBLL = new ExpensaBLL_755ME();
         private UnidadFuncionalBE_755ME? _unidadSeleccionada;
 
         public FormOrdenPago_755ME()
@@ -20,12 +22,11 @@ namespace AppBase
         {
             SessionManager.AgregarObservador(this);
             ActualizarIdioma(SessionManager.Idioma);
-            List<ConsorcioBE_755ME> consorcios = _bll.ObtenerConsorciosAsignados_755ME();
+            List<ConsorcioBE_755ME> consorcios = _consorcioBLL.ObtenerConsorciosAsignados_755ME();
             cboConsorcio.DisplayMember = "Nombre_755ME";
             cboConsorcio.DataSource = consorcios;
             bool sinConsorcios = consorcios.Count == 0;
             lblSinConsorcios.Visible = sinConsorcios;
-            lblSinConsorcios.Text = sinConsorcios ? "No tiene consorcios asignados" : "";
             cboConsorcio.Enabled = !sinConsorcios;
         }
 
@@ -45,7 +46,7 @@ namespace AppBase
             dgvPendientes.Rows.Clear();
             if (cboConsorcio.SelectedItem is not ConsorcioBE_755ME consorcio) return;
 
-            List<UnidadFuncionalBE_755ME> pendientes = _bll.ObtenerUnidadesPendientesDeOrden_755ME(consorcio.IdConsorcio_755ME);
+            List<UnidadFuncionalBE_755ME> pendientes = _expensaBLL.ObtenerUnidadesConExpensaSinOrden_755ME(consorcio.IdConsorcio_755ME);
             foreach (UnidadFuncionalBE_755ME uf in pendientes)
             {
                 int fila = dgvPendientes.Rows.Add(uf.Numero_755ME, uf.Tipo_755ME);

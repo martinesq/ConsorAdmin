@@ -41,16 +41,20 @@
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
             mnuLiquidacionExpensas_755ME = new ToolStripMenuItem();
             mnuAnularExpensa_755ME = new ToolStripMenuItem();
-            mnuRevisarComposicion_755ME = new ToolStripMenuItem();
             mnuRegistrarPago_755ME = new ToolStripMenuItem();
-            mnuObtenerMorosidad_755ME = new ToolStripMenuItem();
             mnuGenerarLiquidacion_755ME = new ToolStripMenuItem();
-            mnuEmitirEstadoCuenta_755ME = new ToolStripMenuItem();
             mnuGenerarOrdenPago_755ME = new ToolStripMenuItem();
             mnuRegistrarEgreso_755ME = new ToolStripMenuItem();
-            mnuObtenerEstadoFondo_755ME = new ToolStripMenuItem();
             mnuGestGastos_755ME = new ToolStripMenuItem();
+            mnuReporteGestion_755ME = new ToolStripMenuItem();
             mnuMantenimientoConsorcios_755ME = new ToolStripMenuItem();
+            mnuSerializarExpensas_755ME = new ToolStripMenuItem();
+            mnuServicios_755ME = new ToolStripMenuItem();
+            mnuFormalizarSolicitud_755ME = new ToolStripMenuItem();
+            mnuAsignarProveedor_755ME = new ToolStripMenuItem();
+            mnuCargarPrestacion_755ME = new ToolStripMenuItem();
+            mnuAprobarPrestacion_755ME = new ToolStripMenuItem();
+            mnuReporteServicios_755ME = new ToolStripMenuItem();
             lbdeslog_1 = new Label();
             lbdeslog_2 = new Label();
             menuPrincipal.SuspendLayout();
@@ -59,7 +63,7 @@
             // menuPrincipal
             // 
             menuPrincipal.ImageScalingSize = new Size(24, 24);
-            menuPrincipal.Items.AddRange(new ToolStripItem[] { sesiónToolStripMenuItem, usuariosToolStripMenuItem, familiasToolStripMenuItem, idiomaToolStripMenuItem, nuevoIdiomaToolStripMenuItem, baseDeDatosToolStripMenuItem, bitacoraToolStripMenuItem, mnuMantenimientoConsorcios_755ME, mnuLiquidacionExpensas_755ME });
+            menuPrincipal.Items.AddRange(new ToolStripItem[] { sesiónToolStripMenuItem, usuariosToolStripMenuItem, familiasToolStripMenuItem, idiomaToolStripMenuItem, nuevoIdiomaToolStripMenuItem, baseDeDatosToolStripMenuItem, bitacoraToolStripMenuItem, mnuMantenimientoConsorcios_755ME, mnuSerializarExpensas_755ME, mnuLiquidacionExpensas_755ME, mnuServicios_755ME });
             menuPrincipal.Location = new Point(0, 0);
             menuPrincipal.Name = "menuPrincipal";
             menuPrincipal.Size = new Size(1220, 24);
@@ -149,7 +153,7 @@
             //
             // mnuLiquidacionExpensas_755ME
             //
-            mnuLiquidacionExpensas_755ME.DropDownItems.AddRange(new ToolStripItem[] { mnuAnularExpensa_755ME, mnuRevisarComposicion_755ME, mnuRegistrarPago_755ME, mnuObtenerMorosidad_755ME, mnuGenerarLiquidacion_755ME, mnuEmitirEstadoCuenta_755ME, mnuGenerarOrdenPago_755ME, mnuRegistrarEgreso_755ME, mnuObtenerEstadoFondo_755ME, mnuGestGastos_755ME });
+            mnuLiquidacionExpensas_755ME.DropDownItems.AddRange(new ToolStripItem[] { mnuAnularExpensa_755ME, mnuRegistrarPago_755ME, mnuGenerarLiquidacion_755ME, mnuGenerarOrdenPago_755ME, mnuRegistrarEgreso_755ME, mnuGestGastos_755ME, mnuReporteGestion_755ME });
             mnuLiquidacionExpensas_755ME.Name = "mnuLiquidacionExpensas_755ME";
             mnuLiquidacionExpensas_755ME.Size = new Size(160, 20);
             mnuLiquidacionExpensas_755ME.Text = "Liquidación de Expensas";
@@ -158,61 +162,30 @@
             //
             // mnuAnularExpensa_755ME
             //
-            mnuAnularExpensa_755ME.Enabled = false;
             mnuAnularExpensa_755ME.Name = "mnuAnularExpensa_755ME";
             mnuAnularExpensa_755ME.Size = new Size(238, 22);
             mnuAnularExpensa_755ME.Text = "Anular expensa";
             mnuAnularExpensa_755ME.Tag = "lb_anular_expensa";
             mnuAnularExpensa_755ME.Click += mnuAnularExpensa_755ME_Click;
             //
-            // mnuRevisarComposicion_755ME
-            //
-            mnuRevisarComposicion_755ME.Enabled = false;
-            mnuRevisarComposicion_755ME.Name = "mnuRevisarComposicion_755ME";
-            mnuRevisarComposicion_755ME.Size = new Size(238, 22);
-            mnuRevisarComposicion_755ME.Text = "Revisar composición de expensa";
-            mnuRevisarComposicion_755ME.Tag = "lb_menu_revisar_composicion";
-            mnuRevisarComposicion_755ME.Click += mnuRevisarComposicion_755ME_Click;
-            //
             // mnuRegistrarPago_755ME
             //
-            mnuRegistrarPago_755ME.Enabled = false;
             mnuRegistrarPago_755ME.Name = "mnuRegistrarPago_755ME";
             mnuRegistrarPago_755ME.Size = new Size(238, 22);
             mnuRegistrarPago_755ME.Text = "Registrar pago";
             mnuRegistrarPago_755ME.Tag = "lb_registrar_pago";
             mnuRegistrarPago_755ME.Click += mnuRegistrarPago_755ME_Click;
             //
-            // mnuObtenerMorosidad_755ME
-            //
-            mnuObtenerMorosidad_755ME.Enabled = false;
-            mnuObtenerMorosidad_755ME.Name = "mnuObtenerMorosidad_755ME";
-            mnuObtenerMorosidad_755ME.Size = new Size(238, 22);
-            mnuObtenerMorosidad_755ME.Text = "Obtener morosidad";
-            mnuObtenerMorosidad_755ME.Tag = "lb_menu_morosidad";
-            mnuObtenerMorosidad_755ME.Click += mnuObtenerMorosidad_755ME_Click;
-            //
             // mnuGenerarLiquidacion_755ME
             //
-            mnuGenerarLiquidacion_755ME.Enabled = false;
             mnuGenerarLiquidacion_755ME.Name = "mnuGenerarLiquidacion_755ME";
             mnuGenerarLiquidacion_755ME.Size = new Size(238, 22);
             mnuGenerarLiquidacion_755ME.Text = "Generar liquidación de expensas";
             mnuGenerarLiquidacion_755ME.Tag = "lb_generar_liquidacion";
             mnuGenerarLiquidacion_755ME.Click += mnuGenerarLiquidacion_755ME_Click;
             //
-            // mnuEmitirEstadoCuenta_755ME
-            //
-            mnuEmitirEstadoCuenta_755ME.Enabled = false;
-            mnuEmitirEstadoCuenta_755ME.Name = "mnuEmitirEstadoCuenta_755ME";
-            mnuEmitirEstadoCuenta_755ME.Size = new Size(238, 22);
-            mnuEmitirEstadoCuenta_755ME.Text = "Emitir estado de cuenta";
-            mnuEmitirEstadoCuenta_755ME.Tag = "lb_menu_emitir_estado_cuenta";
-            mnuEmitirEstadoCuenta_755ME.Click += mnuEmitirEstadoCuenta_755ME_Click;
-            //
             // mnuGenerarOrdenPago_755ME
             //
-            mnuGenerarOrdenPago_755ME.Enabled = false;
             mnuGenerarOrdenPago_755ME.Name = "mnuGenerarOrdenPago_755ME";
             mnuGenerarOrdenPago_755ME.Size = new Size(238, 22);
             mnuGenerarOrdenPago_755ME.Text = "Generar orden de pago";
@@ -221,30 +194,27 @@
             //
             // mnuRegistrarEgreso_755ME
             //
-            mnuRegistrarEgreso_755ME.Enabled = false;
             mnuRegistrarEgreso_755ME.Name = "mnuRegistrarEgreso_755ME";
             mnuRegistrarEgreso_755ME.Size = new Size(238, 22);
             mnuRegistrarEgreso_755ME.Text = "Registrar egreso a proveedor";
             mnuRegistrarEgreso_755ME.Tag = "lb_registrar_egreso";
             mnuRegistrarEgreso_755ME.Click += mnuRegistrarEgreso_755ME_Click;
             //
-            // mnuObtenerEstadoFondo_755ME
-            //
-            mnuObtenerEstadoFondo_755ME.Enabled = false;
-            mnuObtenerEstadoFondo_755ME.Name = "mnuObtenerEstadoFondo_755ME";
-            mnuObtenerEstadoFondo_755ME.Size = new Size(238, 22);
-            mnuObtenerEstadoFondo_755ME.Text = "Obtener estado del fondo";
-            mnuObtenerEstadoFondo_755ME.Tag = "lb_obtener_estado_fondo";
-            mnuObtenerEstadoFondo_755ME.Click += mnuObtenerEstadoFondo_755ME_Click;
-            //
             // mnuGestGastos_755ME
             //
-            mnuGestGastos_755ME.Enabled = false;
             mnuGestGastos_755ME.Name = "mnuGestGastos_755ME";
             mnuGestGastos_755ME.Size = new Size(238, 22);
             mnuGestGastos_755ME.Text = "Gastos";
             mnuGestGastos_755ME.Tag = "lb_gastos";
             mnuGestGastos_755ME.Click += mnuGestGastos_755ME_Click;
+            //
+            // mnuReporteGestion_755ME
+            //
+            mnuReporteGestion_755ME.Name = "mnuReporteGestion_755ME";
+            mnuReporteGestion_755ME.Size = new Size(238, 22);
+            mnuReporteGestion_755ME.Text = "Reporte de gestión";
+            mnuReporteGestion_755ME.Tag = "lb_reporte_gestion";
+            mnuReporteGestion_755ME.Click += mnuReporteGestion_755ME_Click;
             //
             // mnuMantenimientoConsorcios_755ME
             //
@@ -254,6 +224,64 @@
             mnuMantenimientoConsorcios_755ME.Tag = "lb_mant_consorcios";
             mnuMantenimientoConsorcios_755ME.Visible = false;
             mnuMantenimientoConsorcios_755ME.Click += AbrirMantenimientoConsorcios_755ME;
+            //
+            // mnuSerializarExpensas_755ME
+            //
+            mnuSerializarExpensas_755ME.Name = "mnuSerializarExpensas_755ME";
+            mnuSerializarExpensas_755ME.Size = new Size(190, 20);
+            mnuSerializarExpensas_755ME.Text = "Serializar/Deserializar expensas";
+            mnuSerializarExpensas_755ME.Tag = "lb_ser_menu";
+            mnuSerializarExpensas_755ME.Visible = false;
+            mnuSerializarExpensas_755ME.Click += AbrirSerializacionExpensas_755ME;
+            //
+            // mnuServicios_755ME
+            //
+            mnuServicios_755ME.DropDownItems.AddRange(new ToolStripItem[] { mnuFormalizarSolicitud_755ME, mnuAsignarProveedor_755ME, mnuCargarPrestacion_755ME, mnuAprobarPrestacion_755ME, mnuReporteServicios_755ME });
+            mnuServicios_755ME.Name = "mnuServicios_755ME";
+            mnuServicios_755ME.Size = new Size(140, 20);
+            mnuServicios_755ME.Text = "Gestión de Servicios";
+            mnuServicios_755ME.Tag = "lb_menu_servicios";
+            mnuServicios_755ME.Visible = false;
+            //
+            // mnuFormalizarSolicitud_755ME
+            //
+            mnuFormalizarSolicitud_755ME.Name = "mnuFormalizarSolicitud_755ME";
+            mnuFormalizarSolicitud_755ME.Size = new Size(238, 22);
+            mnuFormalizarSolicitud_755ME.Text = "Formalizar solicitud de servicio";
+            mnuFormalizarSolicitud_755ME.Tag = "lb_formalizar_solicitud";
+            mnuFormalizarSolicitud_755ME.Click += mnuFormalizarSolicitud_755ME_Click;
+            //
+            // mnuAsignarProveedor_755ME
+            //
+            mnuAsignarProveedor_755ME.Name = "mnuAsignarProveedor_755ME";
+            mnuAsignarProveedor_755ME.Size = new Size(238, 22);
+            mnuAsignarProveedor_755ME.Text = "Asignar proveedor";
+            mnuAsignarProveedor_755ME.Tag = "lb_asignar_proveedor";
+            mnuAsignarProveedor_755ME.Click += mnuAsignarProveedor_755ME_Click;
+            //
+            // mnuCargarPrestacion_755ME
+            //
+            mnuCargarPrestacion_755ME.Name = "mnuCargarPrestacion_755ME";
+            mnuCargarPrestacion_755ME.Size = new Size(238, 22);
+            mnuCargarPrestacion_755ME.Text = "Cargar prestación";
+            mnuCargarPrestacion_755ME.Tag = "lb_cargar_prestacion";
+            mnuCargarPrestacion_755ME.Click += mnuCargarPrestacion_755ME_Click;
+            //
+            // mnuAprobarPrestacion_755ME
+            //
+            mnuAprobarPrestacion_755ME.Name = "mnuAprobarPrestacion_755ME";
+            mnuAprobarPrestacion_755ME.Size = new Size(238, 22);
+            mnuAprobarPrestacion_755ME.Text = "Aprobar prestación";
+            mnuAprobarPrestacion_755ME.Tag = "lb_aprobar_prestacion";
+            mnuAprobarPrestacion_755ME.Click += mnuAprobarPrestacion_755ME_Click;
+            //
+            // mnuReporteServicios_755ME
+            //
+            mnuReporteServicios_755ME.Name = "mnuReporteServicios_755ME";
+            mnuReporteServicios_755ME.Size = new Size(238, 22);
+            mnuReporteServicios_755ME.Text = "Reporte de servicios";
+            mnuReporteServicios_755ME.Tag = "lb_reporte_servicios";
+            mnuReporteServicios_755ME.Click += AbrirReporteServicios_755ME;
             //
             // lbdeslog_1
             // 
@@ -317,15 +345,19 @@
         private ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuLiquidacionExpensas_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuAnularExpensa_755ME;
-        private System.Windows.Forms.ToolStripMenuItem mnuRevisarComposicion_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuRegistrarPago_755ME;
-        private System.Windows.Forms.ToolStripMenuItem mnuObtenerMorosidad_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerarLiquidacion_755ME;
-        private System.Windows.Forms.ToolStripMenuItem mnuEmitirEstadoCuenta_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerarOrdenPago_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuRegistrarEgreso_755ME;
-        private System.Windows.Forms.ToolStripMenuItem mnuObtenerEstadoFondo_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGestGastos_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuReporteGestion_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuMantenimientoConsorcios_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuSerializarExpensas_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuServicios_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuFormalizarSolicitud_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuAsignarProveedor_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuCargarPrestacion_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuAprobarPrestacion_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuReporteServicios_755ME;
     }
 }

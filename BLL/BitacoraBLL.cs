@@ -17,7 +17,6 @@ namespace BLL
             _crud = new BitacoraDAL();
         }
 
-        // registra una operacion; usuarioId es null si la genera el sistema
         public void Registrar(Guid? usuarioId, string actividad, string entidadId = "", string detalle = "")
         {
             Bitacora b = new Bitacora();
@@ -26,10 +25,12 @@ namespace BLL
             b.EntidadId = entidadId ?? "";
             b.Detalle = detalle ?? "";
             b.Estado = TipoEstado.Agregado;
+            VerificadorBLL verificador = new VerificadorBLL();
+            verificador.ActualizarDVH(b);
             _crud.Save(b);
+            verificador.ActualizarDVV("Bitacora", new BitacoraDAL().GetAll().Cast<IVerificable>().ToList());
         }
 
-        // Registra la operacion asociandola al usuario actualmente logueado, si existe.
         public void RegistrarDeUsuarioActual(string actividad, string entidadId = "", string detalle = "")
         {
             Guid? usuarioId = SessionManager.EstaLogueado() ? SessionManager.Instancia.Usuario.Id : (Guid?)null;

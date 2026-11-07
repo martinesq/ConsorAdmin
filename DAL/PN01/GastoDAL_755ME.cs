@@ -14,6 +14,7 @@ namespace DAL
             g.Monto_755ME = Convert.ToDecimal(fila["Monto"]);
             g.Periodo_755ME = Convert.ToDateTime(fila["Periodo"]);
             g.Rubro_755ME = fila["Rubro"].ToString() ?? "";
+            g.DVH = fila["DVH"] == DBNull.Value ? 0 : Convert.ToInt32(fila["DVH"]);
             return g;
         }
 
@@ -51,13 +52,29 @@ namespace DAL
             return lista;
         }
 
-        public int Insertar_755ME(GastoBE_755ME gasto)
+        public int Insertar_755ME(GastoBE_755ME gasto, int dvh)
         {
-            return AccesoDatos_755ME.Insertar_755ME(
-                "INSERT INTO GASTO (IdConsorcio, Descripcion, Monto, Periodo, Rubro) VALUES (@con, @desc, @monto, @periodo, @rubro)",
+            gasto.DVH = dvh;
+            gasto.IdGasto_755ME = AccesoDatos_755ME.Insertar_755ME(
+                "INSERT INTO GASTO (IdConsorcio, Descripcion, Monto, Periodo, Rubro, DVH) VALUES (@con, @desc, @monto, @periodo, @rubro, @dvh)",
                 AccesoDatos_755ME.Parametro_755ME("@con", gasto.IdConsorcio_755ME), AccesoDatos_755ME.Parametro_755ME("@desc", gasto.Descripcion_755ME),
                 AccesoDatos_755ME.Parametro_755ME("@monto", gasto.Monto_755ME), AccesoDatos_755ME.Parametro_755ME("@periodo", gasto.Periodo_755ME.Date),
-                AccesoDatos_755ME.Parametro_755ME("@rubro", gasto.Rubro_755ME));
+                AccesoDatos_755ME.Parametro_755ME("@rubro", gasto.Rubro_755ME), AccesoDatos_755ME.Parametro_755ME("@dvh", dvh));
+            return gasto.IdGasto_755ME;
+        }
+
+        public List<GastoBE_755ME> ObtenerTodos_755ME()
+        {
+            DataTable tabla = AccesoDatos_755ME.Consultar_755ME("SELECT * FROM GASTO ORDER BY IdGasto");
+            List<GastoBE_755ME> lista = new List<GastoBE_755ME>();
+            foreach (DataRow fila in tabla.Rows) lista.Add(Mapear_755ME(fila));
+            return lista;
+        }
+
+        public void ActualizarDvh_755ME(int idGasto, int dvh)
+        {
+            AccesoDatos_755ME.EjecutarNoQuery_755ME("UPDATE GASTO SET DVH=@dvh WHERE IdGasto=@id",
+                AccesoDatos_755ME.Parametro_755ME("@dvh", dvh), AccesoDatos_755ME.Parametro_755ME("@id", idGasto));
         }
     }
 }

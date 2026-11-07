@@ -11,7 +11,6 @@ namespace SER
 
         static ExportadorPdfService()
         {
-            // PDFsharp admite configurar el origen de fuentes una sola vez por proceso.
             try
             {
                 GlobalFontSettings.UseWindowsFontsUnderWindows = true;
@@ -21,11 +20,16 @@ namespace SER
             }
         }
 
-        // Genera un PDF A4 apaisado con el titulo y una tabla (encabezados + filas), paginando cuando hace falta.
         public void ExportarTabla(string titulo, List<string> encabezados, List<List<string>> filas, string ruta)
         {
             PdfDocument documento = new PdfDocument();
             documento.Info.Title = titulo;
+            AgregarTabla(documento, titulo, encabezados, filas);
+            documento.Save(ruta);
+        }
+
+        public void AgregarTabla(PdfDocument documento, string titulo, List<string> encabezados, List<List<string>> filas)
+        {
             XFont fuenteTitulo = new XFont("Arial", 14, XFontStyleEx.Bold);
             XFont fuenteEncabezado = new XFont("Arial", 9, XFontStyleEx.Bold);
             XFont fuenteCelda = new XFont("Arial", 9, XFontStyleEx.Regular);
@@ -61,7 +65,6 @@ namespace SER
                 y += altoFila;
             }
             grafico.Dispose();
-            documento.Save(ruta);
         }
 
         private static void DibujarFila(XGraphics grafico, List<string> celdas, XFont fuente, double y, double anchoColumna, double alto, bool encabezado)

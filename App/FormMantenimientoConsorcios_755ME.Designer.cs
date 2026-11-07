@@ -48,6 +48,7 @@ namespace AppBase
             colUActiva = new System.Windows.Forms.DataGridViewTextBoxColumn();
             grpUnidad = new System.Windows.Forms.GroupBox();
             btnReactivarUnidad = new System.Windows.Forms.Button();
+            btnVerHistorialUnidad = new System.Windows.Forms.Button();
             btnInactivarUnidad = new System.Windows.Forms.Button();
             btnGuardarUnidad = new System.Windows.Forms.Button();
             btnNuevaUnidad = new System.Windows.Forms.Button();
@@ -58,6 +59,17 @@ namespace AppBase
             txtNumero = new System.Windows.Forms.TextBox();
             lblNumero = new System.Windows.Forms.Label();
             tabConsorcistas = new System.Windows.Forms.TabPage();
+            tabProveedores = new System.Windows.Forms.TabPage();
+            dgvProveedores = new System.Windows.Forms.DataGridView();
+            colPrNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            colPrHabilitado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            grpProveedor = new System.Windows.Forms.GroupBox();
+            lblNombreProveedor = new System.Windows.Forms.Label();
+            txtNombreProveedor = new System.Windows.Forms.TextBox();
+            btnNuevoProveedor = new System.Windows.Forms.Button();
+            btnGuardarProveedor = new System.Windows.Forms.Button();
+            btnInhabilitarProveedor = new System.Windows.Forms.Button();
+            btnHabilitarProveedor = new System.Windows.Forms.Button();
             dgvConsorcistas = new System.Windows.Forms.DataGridView();
             colCoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             colCoApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -94,6 +106,9 @@ namespace AppBase
             ((System.ComponentModel.ISupportInitialize)dgvConsorcistas).BeginInit();
             grpConsorcista.SuspendLayout();
             grpPropietario.SuspendLayout();
+            tabProveedores.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvProveedores).BeginInit();
+            grpProveedor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUnidadesPropietario).BeginInit();
             SuspendLayout();
             //
@@ -102,6 +117,7 @@ namespace AppBase
             tabMaestros.Controls.Add(tabConsorcios);
             tabMaestros.Controls.Add(tabUnidades);
             tabMaestros.Controls.Add(tabConsorcistas);
+            tabMaestros.Controls.Add(tabProveedores);
             tabMaestros.Dock = System.Windows.Forms.DockStyle.Fill;
             tabMaestros.Location = new System.Drawing.Point(0, 0);
             tabMaestros.Name = "tabMaestros";
@@ -391,6 +407,7 @@ namespace AppBase
             // grpUnidad
             //
             grpUnidad.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            grpUnidad.Controls.Add(btnVerHistorialUnidad);
             grpUnidad.Controls.Add(btnReactivarUnidad);
             grpUnidad.Controls.Add(btnInactivarUnidad);
             grpUnidad.Controls.Add(btnGuardarUnidad);
@@ -504,6 +521,16 @@ namespace AppBase
             btnReactivarUnidad.Text = "Reactivar";
             btnReactivarUnidad.Tag = "btn_reactivar";
             btnReactivarUnidad.Click += btnReactivarUnidad_Click;
+            //
+            // btnVerHistorialUnidad
+            //
+            btnVerHistorialUnidad.Enabled = false;
+            btnVerHistorialUnidad.Location = new System.Drawing.Point(15, 205);
+            btnVerHistorialUnidad.Name = "btnVerHistorialUnidad";
+            btnVerHistorialUnidad.Size = new System.Drawing.Size(190, 28);
+            btnVerHistorialUnidad.TabIndex = 10;
+            btnVerHistorialUnidad.Text = "Ver historial";
+            btnVerHistorialUnidad.Click += btnVerHistorialUnidad_Click;
             //
             // tabConsorcistas
             //
@@ -755,6 +782,127 @@ namespace AppBase
             btnQuitarPropietario.Tag = "btn_quitar_propietario";
             btnQuitarPropietario.Click += btnQuitarPropietario_Click;
             //
+            // tabProveedores
+            //
+            tabProveedores.Controls.Add(grpProveedor);
+            tabProveedores.Controls.Add(dgvProveedores);
+            tabProveedores.Location = new System.Drawing.Point(4, 24);
+            tabProveedores.Name = "tabProveedores";
+            tabProveedores.Padding = new System.Windows.Forms.Padding(10);
+            tabProveedores.Size = new System.Drawing.Size(1112, 712);
+            tabProveedores.TabIndex = 3;
+            tabProveedores.Text = "Proveedores";
+            tabProveedores.Tag = "lb_tab_proveedores";
+            //
+            // dgvProveedores
+            //
+            dgvProveedores.AllowUserToAddRows = false;
+            dgvProveedores.AllowUserToDeleteRows = false;
+            dgvProveedores.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            dgvProveedores.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProveedores.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colPrNombre, colPrHabilitado });
+            dgvProveedores.Location = new System.Drawing.Point(13, 13);
+            dgvProveedores.MultiSelect = false;
+            dgvProveedores.Name = "dgvProveedores";
+            dgvProveedores.ReadOnly = true;
+            dgvProveedores.RowHeadersVisible = false;
+            dgvProveedores.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dgvProveedores.Size = new System.Drawing.Size(700, 686);
+            dgvProveedores.TabIndex = 0;
+            dgvProveedores.SelectionChanged += dgvProveedores_SelectionChanged;
+            //
+            // colPrNombre
+            //
+            colPrNombre.FillWeight = 300F;
+            colPrNombre.HeaderText = "Nombre";
+            colPrNombre.Tag = "lb_col_nombre";
+            colPrNombre.Name = "colPrNombre";
+            colPrNombre.ReadOnly = true;
+            //
+            // colPrHabilitado
+            //
+            colPrHabilitado.HeaderText = "Habilitado";
+            colPrHabilitado.Tag = "lb_col_habilitado";
+            colPrHabilitado.Name = "colPrHabilitado";
+            colPrHabilitado.ReadOnly = true;
+            //
+            // grpProveedor
+            //
+            grpProveedor.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            grpProveedor.Controls.Add(btnHabilitarProveedor);
+            grpProveedor.Controls.Add(btnInhabilitarProveedor);
+            grpProveedor.Controls.Add(btnGuardarProveedor);
+            grpProveedor.Controls.Add(btnNuevoProveedor);
+            grpProveedor.Controls.Add(txtNombreProveedor);
+            grpProveedor.Controls.Add(lblNombreProveedor);
+            grpProveedor.Location = new System.Drawing.Point(725, 13);
+            grpProveedor.Name = "grpProveedor";
+            grpProveedor.Size = new System.Drawing.Size(370, 160);
+            grpProveedor.TabIndex = 1;
+            grpProveedor.TabStop = false;
+            grpProveedor.Text = "Proveedor";
+            grpProveedor.Tag = "lb_grp_proveedor";
+            //
+            // lblNombreProveedor
+            //
+            lblNombreProveedor.AutoSize = true;
+            lblNombreProveedor.Location = new System.Drawing.Point(15, 28);
+            lblNombreProveedor.Name = "lblNombreProveedor";
+            lblNombreProveedor.Size = new System.Drawing.Size(58, 15);
+            lblNombreProveedor.TabIndex = 0;
+            lblNombreProveedor.Text = "Nombre:";
+            lblNombreProveedor.Tag = "lb_nombre";
+            //
+            // txtNombreProveedor
+            //
+            txtNombreProveedor.Location = new System.Drawing.Point(120, 25);
+            txtNombreProveedor.MaxLength = 100;
+            txtNombreProveedor.Name = "txtNombreProveedor";
+            txtNombreProveedor.Size = new System.Drawing.Size(230, 23);
+            txtNombreProveedor.TabIndex = 1;
+            //
+            // btnNuevoProveedor
+            //
+            btnNuevoProveedor.Location = new System.Drawing.Point(15, 70);
+            btnNuevoProveedor.Name = "btnNuevoProveedor";
+            btnNuevoProveedor.Size = new System.Drawing.Size(90, 28);
+            btnNuevoProveedor.TabIndex = 2;
+            btnNuevoProveedor.Text = "Nuevo";
+            btnNuevoProveedor.Tag = "btn_nuevo";
+            btnNuevoProveedor.Click += btnNuevoProveedor_Click;
+            //
+            // btnGuardarProveedor
+            //
+            btnGuardarProveedor.Location = new System.Drawing.Point(115, 70);
+            btnGuardarProveedor.Name = "btnGuardarProveedor";
+            btnGuardarProveedor.Size = new System.Drawing.Size(90, 28);
+            btnGuardarProveedor.TabIndex = 3;
+            btnGuardarProveedor.Text = "Guardar";
+            btnGuardarProveedor.Tag = "btn_guardar";
+            btnGuardarProveedor.Click += btnGuardarProveedor_Click;
+            //
+            // btnInhabilitarProveedor
+            //
+            btnInhabilitarProveedor.Enabled = false;
+            btnInhabilitarProveedor.Location = new System.Drawing.Point(15, 110);
+            btnInhabilitarProveedor.Name = "btnInhabilitarProveedor";
+            btnInhabilitarProveedor.Size = new System.Drawing.Size(90, 28);
+            btnInhabilitarProveedor.TabIndex = 4;
+            btnInhabilitarProveedor.Text = "Inhabilitar";
+            btnInhabilitarProveedor.Tag = "btn_inhabilitar";
+            btnInhabilitarProveedor.Click += btnInhabilitarProveedor_Click;
+            //
+            // btnHabilitarProveedor
+            //
+            btnHabilitarProveedor.Enabled = false;
+            btnHabilitarProveedor.Location = new System.Drawing.Point(115, 110);
+            btnHabilitarProveedor.Name = "btnHabilitarProveedor";
+            btnHabilitarProveedor.Size = new System.Drawing.Size(90, 28);
+            btnHabilitarProveedor.TabIndex = 5;
+            btnHabilitarProveedor.Text = "Habilitar";
+            btnHabilitarProveedor.Tag = "btn_habilitar";
+            btnHabilitarProveedor.Click += btnHabilitarProveedor_Click;
+            //
             // FormMantenimientoConsorcios_755ME
             //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -786,6 +934,10 @@ namespace AppBase
             grpPropietario.ResumeLayout(false);
             grpPropietario.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUnidadesPropietario).EndInit();
+            tabProveedores.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvProveedores).EndInit();
+            grpProveedor.ResumeLayout(false);
+            grpProveedor.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -822,6 +974,7 @@ namespace AppBase
         private System.Windows.Forms.DataGridViewTextBoxColumn colUActiva;
         private System.Windows.Forms.GroupBox grpUnidad;
         private System.Windows.Forms.Button btnReactivarUnidad;
+        private System.Windows.Forms.Button btnVerHistorialUnidad;
         private System.Windows.Forms.Button btnInactivarUnidad;
         private System.Windows.Forms.Button btnGuardarUnidad;
         private System.Windows.Forms.Button btnNuevaUnidad;
@@ -832,6 +985,17 @@ namespace AppBase
         private System.Windows.Forms.TextBox txtNumero;
         private System.Windows.Forms.Label lblNumero;
         private System.Windows.Forms.TabPage tabConsorcistas;
+        private System.Windows.Forms.TabPage tabProveedores;
+        private System.Windows.Forms.DataGridView dgvProveedores;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrHabilitado;
+        private System.Windows.Forms.GroupBox grpProveedor;
+        private System.Windows.Forms.Label lblNombreProveedor;
+        private System.Windows.Forms.TextBox txtNombreProveedor;
+        private System.Windows.Forms.Button btnNuevoProveedor;
+        private System.Windows.Forms.Button btnGuardarProveedor;
+        private System.Windows.Forms.Button btnInhabilitarProveedor;
+        private System.Windows.Forms.Button btnHabilitarProveedor;
         private System.Windows.Forms.DataGridView dgvConsorcistas;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCoNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCoApellido;

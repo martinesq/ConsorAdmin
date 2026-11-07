@@ -39,6 +39,7 @@
             btnDesbloquear = new Button();
             btnEditarDatos = new Button();
             btnBloquear = new Button();
+            btnReactivar = new Button();
             btnNuevo = new Button();
             dataPermisosUser = new DataGridView();
             Permisos = new DataGridViewTextBoxColumn();
@@ -142,6 +143,19 @@
             btnBloquear.Text = "Bloquear";
             btnBloquear.UseVisualStyleBackColor = true;
             btnBloquear.Click += Bloquear;
+            //
+            // btnReactivar
+            //
+            btnReactivar.Location = new Point(656, 338);
+            btnReactivar.Margin = new Padding(4, 5, 4, 5);
+            btnReactivar.Name = "btnReactivar";
+            btnReactivar.Size = new Size(136, 38);
+            btnReactivar.TabIndex = 5;
+            btnReactivar.Tag = "btn_reactivar";
+            btnReactivar.Text = "Reactivar";
+            btnReactivar.UseVisualStyleBackColor = true;
+            btnReactivar.Visible = false;
+            btnReactivar.Click += Reactivar;
             // 
             // btnNuevo
             // 
@@ -537,6 +551,7 @@
             Controls.Add(dataPermisosUser);
             Controls.Add(btnNuevo);
             Controls.Add(btnBloquear);
+            Controls.Add(btnReactivar);
             Controls.Add(btnEditarDatos);
             Controls.Add(btnDesbloquear);
             Controls.Add(lbUser);
@@ -567,6 +582,7 @@
         private Button btnDesbloquear;
         private Button btnEditarDatos;
         private Button btnBloquear;
+        private Button btnReactivar;
         private Button btnNuevo;
         private DataGridView dataPermisosUser;
         private DataGridView dataFamilias;

@@ -9,7 +9,6 @@ namespace BE
 {
     public class Usuario : Entity, IUsuario, IVerificable
     {
-        // orden fijo de atributos para calcular el DVH (sin Id ni Estado)
         private static readonly string[] _atributosVerificables = { "Email", "Password", "Bloq", "Baja" };
         private IList<IPermiso> _permisos;
         public Usuario()

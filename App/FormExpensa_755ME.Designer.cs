@@ -31,39 +31,15 @@ namespace AppBase
             txtMotivo = new System.Windows.Forms.TextBox();
             btnAnular = new System.Windows.Forms.Button();
             lblSinConsorciosAnular = new System.Windows.Forms.Label();
-            tabComposicion = new System.Windows.Forms.TabPage();
-            lblConsorcioComposicion = new System.Windows.Forms.Label();
-            cboConsorcioComposicion = new System.Windows.Forms.ComboBox();
-            lblUnidad = new System.Windows.Forms.Label();
-            cboUnidad = new System.Windows.Forms.ComboBox();
-            dgvLiquidadas = new System.Windows.Forms.DataGridView();
-            colLiqPeriodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colLiqMonto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colLiqVencimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colLiqEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            grpComposicion = new System.Windows.Forms.GroupBox();
-            dgvGastos = new System.Windows.Forms.DataGridView();
-            colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colGastoMonto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            colGastoRubro = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            lblHonorarioAplicado = new System.Windows.Forms.Label();
-            lblCoeficienteAplicado = new System.Windows.Forms.Label();
-            lblRecargoPorMora = new System.Windows.Forms.Label();
-            lblSinConsorciosComposicion = new System.Windows.Forms.Label();
             tabExpensa.SuspendLayout();
             tabAnular.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAnulables).BeginInit();
             grpMotivo.SuspendLayout();
-            tabComposicion.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvLiquidadas).BeginInit();
-            grpComposicion.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvGastos).BeginInit();
             SuspendLayout();
             //
             // tabExpensa
             //
             tabExpensa.Controls.Add(tabAnular);
-            tabExpensa.Controls.Add(tabComposicion);
             tabExpensa.Dock = System.Windows.Forms.DockStyle.Fill;
             tabExpensa.Location = new System.Drawing.Point(0, 0);
             tabExpensa.Name = "tabExpensa";
@@ -200,200 +176,11 @@ namespace AppBase
             lblSinConsorciosAnular.ForeColor = System.Drawing.Color.DarkRed;
             lblSinConsorciosAnular.Location = new System.Drawing.Point(100, 45);
             lblSinConsorciosAnular.Name = "lblSinConsorciosAnular";
+            lblSinConsorciosAnular.Tag = "lb_sin_consorcios";
+            lblSinConsorciosAnular.Text = "No tiene consorcios asignados";
             lblSinConsorciosAnular.Size = new System.Drawing.Size(0, 15);
             lblSinConsorciosAnular.TabIndex = 4;
             lblSinConsorciosAnular.Visible = false;
-            //
-            // tabComposicion
-            //
-            tabComposicion.Controls.Add(lblSinConsorciosComposicion);
-            tabComposicion.Controls.Add(grpComposicion);
-            tabComposicion.Controls.Add(dgvLiquidadas);
-            tabComposicion.Controls.Add(cboUnidad);
-            tabComposicion.Controls.Add(lblUnidad);
-            tabComposicion.Controls.Add(cboConsorcioComposicion);
-            tabComposicion.Controls.Add(lblConsorcioComposicion);
-            tabComposicion.Location = new System.Drawing.Point(4, 24);
-            tabComposicion.Name = "tabComposicion";
-            tabComposicion.Padding = new System.Windows.Forms.Padding(10);
-            tabComposicion.Size = new System.Drawing.Size(992, 622);
-            tabComposicion.TabIndex = 1;
-            tabComposicion.Text = "Revisar composición";
-            tabComposicion.Tag = "lb_tab_composicion";
-            //
-            // lblConsorcioComposicion
-            //
-            lblConsorcioComposicion.AutoSize = true;
-            lblConsorcioComposicion.Location = new System.Drawing.Point(13, 15);
-            lblConsorcioComposicion.Name = "lblConsorcioComposicion";
-            lblConsorcioComposicion.Size = new System.Drawing.Size(63, 15);
-            lblConsorcioComposicion.TabIndex = 0;
-            lblConsorcioComposicion.Text = "Consorcio:";
-            lblConsorcioComposicion.Tag = "lb_consorcio";
-            //
-            // cboConsorcioComposicion
-            //
-            cboConsorcioComposicion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            cboConsorcioComposicion.FormattingEnabled = true;
-            cboConsorcioComposicion.Location = new System.Drawing.Point(100, 12);
-            cboConsorcioComposicion.Name = "cboConsorcioComposicion";
-            cboConsorcioComposicion.Size = new System.Drawing.Size(300, 23);
-            cboConsorcioComposicion.TabIndex = 1;
-            cboConsorcioComposicion.SelectedIndexChanged += cboConsorcioComposicion_SelectedIndexChanged;
-            //
-            // lblUnidad
-            //
-            lblUnidad.AutoSize = true;
-            lblUnidad.Location = new System.Drawing.Point(420, 15);
-            lblUnidad.Name = "lblUnidad";
-            lblUnidad.Size = new System.Drawing.Size(85, 15);
-            lblUnidad.TabIndex = 2;
-            lblUnidad.Text = "Unidad funcional:";
-            lblUnidad.Tag = "lb_unidad";
-            //
-            // cboUnidad
-            //
-            cboUnidad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            cboUnidad.Enabled = false;
-            cboUnidad.FormattingEnabled = true;
-            cboUnidad.Location = new System.Drawing.Point(515, 12);
-            cboUnidad.Name = "cboUnidad";
-            cboUnidad.Size = new System.Drawing.Size(200, 23);
-            cboUnidad.TabIndex = 3;
-            cboUnidad.SelectedIndexChanged += cboUnidad_SelectedIndexChanged;
-            //
-            // dgvLiquidadas
-            //
-            dgvLiquidadas.AllowUserToAddRows = false;
-            dgvLiquidadas.AllowUserToDeleteRows = false;
-            dgvLiquidadas.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dgvLiquidadas.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colLiqPeriodo, colLiqMonto, colLiqVencimiento, colLiqEstado });
-            dgvLiquidadas.Location = new System.Drawing.Point(13, 45);
-            dgvLiquidadas.MultiSelect = false;
-            dgvLiquidadas.Name = "dgvLiquidadas";
-            dgvLiquidadas.ReadOnly = true;
-            dgvLiquidadas.RowHeadersVisible = false;
-            dgvLiquidadas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            dgvLiquidadas.Size = new System.Drawing.Size(966, 180);
-            dgvLiquidadas.TabIndex = 4;
-            dgvLiquidadas.SelectionChanged += dgvLiquidadas_SelectionChanged;
-            //
-            // colLiqPeriodo
-            //
-            colLiqPeriodo.HeaderText = "Periodo";
-            colLiqPeriodo.Tag = "lb_col_periodo";
-            colLiqPeriodo.Name = "colLiqPeriodo";
-            colLiqPeriodo.ReadOnly = true;
-            //
-            // colLiqMonto
-            //
-            colLiqMonto.HeaderText = "Monto";
-            colLiqMonto.Tag = "lb_col_monto";
-            colLiqMonto.Name = "colLiqMonto";
-            colLiqMonto.ReadOnly = true;
-            //
-            // colLiqVencimiento
-            //
-            colLiqVencimiento.HeaderText = "Vencimiento";
-            colLiqVencimiento.Tag = "lb_col_vencimiento";
-            colLiqVencimiento.Name = "colLiqVencimiento";
-            colLiqVencimiento.ReadOnly = true;
-            //
-            // colLiqEstado
-            //
-            colLiqEstado.HeaderText = "Estado";
-            colLiqEstado.Tag = "lb_col_estado";
-            colLiqEstado.Name = "colLiqEstado";
-            colLiqEstado.ReadOnly = true;
-            //
-            // grpComposicion
-            //
-            grpComposicion.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            grpComposicion.Controls.Add(lblRecargoPorMora);
-            grpComposicion.Controls.Add(lblCoeficienteAplicado);
-            grpComposicion.Controls.Add(lblHonorarioAplicado);
-            grpComposicion.Controls.Add(dgvGastos);
-            grpComposicion.Location = new System.Drawing.Point(13, 240);
-            grpComposicion.Name = "grpComposicion";
-            grpComposicion.Size = new System.Drawing.Size(966, 350);
-            grpComposicion.TabIndex = 5;
-            grpComposicion.TabStop = false;
-            grpComposicion.Text = "Composición de la expensa";
-            grpComposicion.Tag = "lb_grp_composicion";
-            //
-            // dgvGastos
-            //
-            dgvGastos.AllowUserToAddRows = false;
-            dgvGastos.AllowUserToDeleteRows = false;
-            dgvGastos.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            dgvGastos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colGastoDescripcion, colGastoMonto, colGastoRubro });
-            dgvGastos.Location = new System.Drawing.Point(15, 22);
-            dgvGastos.Name = "dgvGastos";
-            dgvGastos.ReadOnly = true;
-            dgvGastos.RowHeadersVisible = false;
-            dgvGastos.Size = new System.Drawing.Size(936, 220);
-            dgvGastos.TabIndex = 0;
-            //
-            // colGastoDescripcion
-            //
-            colGastoDescripcion.HeaderText = "Descripción";
-            colGastoDescripcion.Tag = "lb_col_descripcion";
-            colGastoDescripcion.Name = "colGastoDescripcion";
-            colGastoDescripcion.ReadOnly = true;
-            //
-            // colGastoMonto
-            //
-            colGastoMonto.HeaderText = "Monto";
-            colGastoMonto.Tag = "lb_col_monto";
-            colGastoMonto.Name = "colGastoMonto";
-            colGastoMonto.ReadOnly = true;
-            //
-            // colGastoRubro
-            //
-            colGastoRubro.HeaderText = "Rubro";
-            colGastoRubro.Tag = "lb_col_rubro";
-            colGastoRubro.Name = "colGastoRubro";
-            colGastoRubro.ReadOnly = true;
-            //
-            // lblHonorarioAplicado
-            //
-            lblHonorarioAplicado.AutoSize = true;
-            lblHonorarioAplicado.Location = new System.Drawing.Point(15, 255);
-            lblHonorarioAplicado.Name = "lblHonorarioAplicado";
-            lblHonorarioAplicado.Size = new System.Drawing.Size(120, 15);
-            lblHonorarioAplicado.TabIndex = 1;
-            lblHonorarioAplicado.Text = "Honorario aplicado:";
-            lblHonorarioAplicado.Tag = "lb_honorario_aplicado";
-            //
-            // lblCoeficienteAplicado
-            //
-            lblCoeficienteAplicado.AutoSize = true;
-            lblCoeficienteAplicado.Location = new System.Drawing.Point(320, 255);
-            lblCoeficienteAplicado.Name = "lblCoeficienteAplicado";
-            lblCoeficienteAplicado.Size = new System.Drawing.Size(130, 15);
-            lblCoeficienteAplicado.TabIndex = 2;
-            lblCoeficienteAplicado.Text = "Coeficiente utilizado:";
-            lblCoeficienteAplicado.Tag = "lb_coeficiente_utilizado";
-            //
-            // lblRecargoPorMora
-            //
-            lblRecargoPorMora.AutoSize = true;
-            lblRecargoPorMora.Location = new System.Drawing.Point(15, 285);
-            lblRecargoPorMora.Name = "lblRecargoPorMora";
-            lblRecargoPorMora.Size = new System.Drawing.Size(120, 15);
-            lblRecargoPorMora.TabIndex = 3;
-            lblRecargoPorMora.Text = "Recargo por mora:";
-            lblRecargoPorMora.Tag = "lb_recargo_mora";
-            //
-            // lblSinConsorciosComposicion
-            //
-            lblSinConsorciosComposicion.AutoSize = true;
-            lblSinConsorciosComposicion.ForeColor = System.Drawing.Color.DarkRed;
-            lblSinConsorciosComposicion.Location = new System.Drawing.Point(100, 45);
-            lblSinConsorciosComposicion.Name = "lblSinConsorciosComposicion";
-            lblSinConsorciosComposicion.Size = new System.Drawing.Size(0, 15);
-            lblSinConsorciosComposicion.TabIndex = 6;
-            lblSinConsorciosComposicion.Visible = false;
             //
             // FormExpensa_755ME
             //
@@ -413,12 +200,6 @@ namespace AppBase
             ((System.ComponentModel.ISupportInitialize)dgvAnulables).EndInit();
             grpMotivo.ResumeLayout(false);
             grpMotivo.PerformLayout();
-            tabComposicion.ResumeLayout(false);
-            tabComposicion.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvLiquidadas).EndInit();
-            grpComposicion.ResumeLayout(false);
-            grpComposicion.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvGastos).EndInit();
             ResumeLayout(false);
         }
 
@@ -438,24 +219,5 @@ namespace AppBase
         private System.Windows.Forms.TextBox txtMotivo;
         private System.Windows.Forms.Button btnAnular;
         private System.Windows.Forms.Label lblSinConsorciosAnular;
-        private System.Windows.Forms.TabPage tabComposicion;
-        private System.Windows.Forms.Label lblConsorcioComposicion;
-        private System.Windows.Forms.ComboBox cboConsorcioComposicion;
-        private System.Windows.Forms.Label lblUnidad;
-        private System.Windows.Forms.ComboBox cboUnidad;
-        private System.Windows.Forms.DataGridView dgvLiquidadas;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLiqPeriodo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLiqMonto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLiqVencimiento;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLiqEstado;
-        private System.Windows.Forms.GroupBox grpComposicion;
-        private System.Windows.Forms.DataGridView dgvGastos;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoDescripcion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoMonto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoRubro;
-        private System.Windows.Forms.Label lblHonorarioAplicado;
-        private System.Windows.Forms.Label lblCoeficienteAplicado;
-        private System.Windows.Forms.Label lblRecargoPorMora;
-        private System.Windows.Forms.Label lblSinConsorciosComposicion;
     }
 }

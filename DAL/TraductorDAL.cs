@@ -39,6 +39,7 @@ namespace DAL
             i = new Idioma(Guid.Parse(d["Idioma_ID"].ToString()));
             i.Nombre = d["Idioma_Descripcion"].ToString();
             i.Default = bool.Parse(d["Idioma_Default"].ToString());
+            i.DVH = Convert.ToInt32(d["DVH"]);
             i.Estado = TipoEstado.SinCambios;
             i2 = i;
         }
@@ -65,6 +66,7 @@ namespace DAL
                         Traduccion tra = new Traduccion();
                         tra.Etiqueta = eti;
                         tra.Texto = dr["Traduccion_Traduccion"].ToString();
+                        tra.IdiomaId = _idioma.Id;
                         _traducciones.Add(etiqueta, tra);
                     }
                 }
@@ -74,10 +76,10 @@ namespace DAL
         {
             try
             {
-                mDAO.EjecutarQuery("INSERT INTO Idioma (Idioma_ID, Idioma_Descripcion) VALUES ('" + nuevoIdioma.Id + "','" + nuevoIdioma.Nombre + "')");
+                mDAO.EjecutarQuery("INSERT INTO Idioma (Idioma_ID, Idioma_Descripcion, Idioma_Default, DVH) VALUES ('" + nuevoIdioma.Id + "','" + nuevoIdioma.Nombre + "',0," + ((IVerificable)nuevoIdioma).DVH + ")");
                 foreach (ITraduccion dic in diccionario)
                 {     
-                    mDAO.EjecutarQuery("INSERT INTO Traduccion (Etiqueta_ID, Idioma_ID, Traduccion_Traduccion) VALUES ('" + dic.Etiqueta.Id + "','" + nuevoIdioma.Id + "','" + dic.Texto + "')");
+                    mDAO.EjecutarQuery("INSERT INTO Traduccion (Etiqueta_ID, Idioma_ID, Traduccion_Traduccion, DVH) VALUES ('" + dic.Etiqueta.Id + "','" + nuevoIdioma.Id + "','" + dic.Texto + "'," + ((IVerificable)dic).DVH + ")");
                 }
             }
             catch (Exception ex)
@@ -85,6 +87,51 @@ namespace DAL
 
                 throw ex;
             }
+        }
+
+        public List<Etiqueta> ObtenerEtiquetas()
+        {
+            List<Etiqueta> lista = new List<Etiqueta>();
+            DataSet d = mDAO.ObtenerDatos("SELECT * FROM Etiqueta");
+            foreach (DataRow dr in d.Tables[0].Rows)
+            {
+                Etiqueta e = new Etiqueta(Guid.Parse(dr["Etiqueta_ID"].ToString()));
+                e.Nombre = dr["Etiqueta_Descripcion"].ToString();
+                e.DVH = Convert.ToInt32(dr["DVH"]);
+                lista.Add(e);
+            }
+            return lista;
+        }
+
+        public List<Traduccion> ObtenerTodasLasTraducciones()
+        {
+            List<Traduccion> lista = new List<Traduccion>();
+            DataSet d = mDAO.ObtenerDatos("SELECT * FROM Traduccion");
+            foreach (DataRow dr in d.Tables[0].Rows)
+            {
+                Traduccion t = new Traduccion();
+                t.Etiqueta = new Etiqueta(Guid.Parse(dr["Etiqueta_ID"].ToString()));
+                t.IdiomaId = Guid.Parse(dr["Idioma_ID"].ToString());
+                t.Texto = dr["Traduccion_Traduccion"].ToString();
+                t.DVH = Convert.ToInt32(dr["DVH"]);
+                lista.Add(t);
+            }
+            return lista;
+        }
+
+        public void ActualizarDvhIdioma(Guid id, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Idioma SET DVH=" + dvh + " WHERE Idioma_ID='" + id + "'");
+        }
+
+        public void ActualizarDvhEtiqueta(Guid id, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Etiqueta SET DVH=" + dvh + " WHERE Etiqueta_ID='" + id + "'");
+        }
+
+        public void ActualizarDvhTraduccion(Guid etiquetaId, Guid idiomaId, int dvh)
+        {
+            mDAO.EjecutarQuery("UPDATE Traduccion SET DVH=" + dvh + " WHERE Etiqueta_ID='" + etiquetaId + "' AND Idioma_ID='" + idiomaId + "'");
         }
 
     }

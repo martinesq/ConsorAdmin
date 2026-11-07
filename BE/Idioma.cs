@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class Idioma : IIdioma
+    public class Idioma : IIdioma, IVerificable
     {
+        private static readonly string[] _atributosVerificables = { "Nombre", "Default" };
+
         public Idioma()
         {
             Id = Guid.NewGuid();
@@ -22,5 +24,8 @@ namespace BE
         public Guid Id { get; set; }
         public TipoEstado Estado { get; set; }
         public bool Baja { get; set; }
+        public int DVH { get; set; }
+        public string NombreTabla { get { return "Idioma"; } }
+        public string[] AtributosVerificables { get { return _atributosVerificables; } }
     }
 }
