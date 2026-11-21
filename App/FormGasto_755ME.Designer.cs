@@ -226,6 +226,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormGasto_755ME";
+            HelpRequested += FormGasto_755ME_HelpRequested;
             Text = "Gastos";
             Tag = "lb_gastos";
             Load += FormGasto_755ME_Load;

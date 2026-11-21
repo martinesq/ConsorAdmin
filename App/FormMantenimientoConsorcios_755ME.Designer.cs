@@ -911,6 +911,7 @@ namespace AppBase
             Controls.Add(tabMaestros);
             MinimumSize = new System.Drawing.Size(1120, 740);
             Name = "FormMantenimientoConsorcios_755ME";
+            HelpRequested += FormMantenimientoConsorcios_755ME_HelpRequested;
             Text = "Mantenimiento de consorcios";
             Tag = "lb_mant_consorcios";
             Load += FormMantenimientoConsorcios_755ME_Load;

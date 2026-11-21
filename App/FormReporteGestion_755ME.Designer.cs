@@ -638,6 +638,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(1000, 600);
             Name = "FormReporteGestion_755ME";
+            HelpRequested += FormReporteGestion_755ME_HelpRequested;
             Text = "Reporte de gestión";
             Tag = "lb_reporte_gestion";
             Load += FormReporteGestion_755ME_Load;

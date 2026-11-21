@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Integrity resolution</title>
+</head>
+<body style="font-family: Segoe UI, Arial, sans-serif; font-size: 10pt; margin: 16px;">
+<h1>Integrity resolution</h1>
+<h3>What is it for?</h3>
+<p>When logging in the system checks the check digits. If some data was changed outside the system, this screen opens for the administrator with the failing tables and rows. Other users cannot log in until it is solved.</p>
+<h3>Steps</h3>
+<ol>
+<li>Check in the grid which tables, rows and fields fail.</li>
+<li>Restore from backup: choose a .bak and confirm. The database goes back to that backup.</li>
+<li>Recalculate check digits: the current data is taken as correct and calculated again.</li>
+<li>Cancel: nothing is fixed and the session is closed.</li>
+</ol>
+<h3>Common errors</h3>
+<ul>
+<li>If you see <i>The data integrity check is still failing. Review the details and choose another action.</i>: the chosen backup also has problems, try another one or recalculate.</li>
+<li>If you see <i>The restored backup does not contain the current administrator. You must log in again.</i>: log in again with a user that exists in that backup.</li>
+<li>If you see <i>Error restoring database / Error recalculating the check digits</i>: try again and, if it continues, check the database connection.</li>
+</ul>
+<p><a href="indice.html">Back to the index</a></p>
+</body>
+</html>

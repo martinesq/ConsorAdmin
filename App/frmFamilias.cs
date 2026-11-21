@@ -224,7 +224,7 @@ namespace AppBase
                 }
                 else
                 {
-                    MessageBox.Show("Seleecione una familiar");
+                    MessageBox.Show("Seleccione una familia");
                 }
             }
             catch (Exception ex)
@@ -259,6 +259,12 @@ namespace AppBase
         private void frmFamilias_FormClosing(object sender, FormClosingEventArgs e)
         {
             SessionManager.QuitarObservador(this);
+        }
+
+        private void frmFamilias_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "familias");
+            hlpevent.Handled = true;
         }
     }
 }

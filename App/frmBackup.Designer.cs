@@ -141,6 +141,7 @@
             Controls.Add(btnBackup);
             Controls.Add(lbTitulo);
             Name = "frmBackup";
+            HelpRequested += frmBackup_HelpRequested_755ME;
             Tag = "lb_backupRestore";
             Text = "Backup / Restaurar";
             FormClosing += frmBackup_FormClosing;

@@ -199,6 +199,7 @@ namespace AppBase
             Controls.Add(cboConsorcio);
             Controls.Add(rbPorConsorcio);
             Name = "FormReporteServiciosPN02_755ME";
+            HelpRequested += FormReporteServiciosPN02_755ME_HelpRequested;
             Tag = "lb_reporte_servicios";
             Text = "Reporte de servicios";
             FormClosing += FormReporteServiciosPN02_755ME_FormClosing;

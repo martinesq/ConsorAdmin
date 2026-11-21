@@ -200,6 +200,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormSolicitudServicio_755ME";
+            HelpRequested += FormSolicitudServicio_755ME_HelpRequested;
             Text = "Formalizar solicitud de servicio";
             Tag = "lb_formalizar_solicitud";
             Load += FormSolicitudServicio_755ME_Load;

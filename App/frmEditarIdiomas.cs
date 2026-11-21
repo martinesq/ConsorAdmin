@@ -122,5 +122,11 @@ namespace AppBase
             }
             
         }
+
+        private void frmEditarIdiomas_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "idioma");
+            hlpevent.Handled = true;
+        }
     }
 }

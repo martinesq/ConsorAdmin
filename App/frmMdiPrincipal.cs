@@ -33,6 +33,11 @@ namespace AppBase
             {
                 _userBLL.Logout();
                 CerrarHijosMdi();
+                // la ayuda no es hija mdi, se cierra aparte
+                foreach (FormAyuda_755ME ayuda in OwnedForms.OfType<FormAyuda_755ME>().ToList())
+                {
+                    ayuda.Close();
+                }
                 Actualizar();
             }
            // frmMdiPrincipal_Load(sender, e);
@@ -68,11 +73,13 @@ namespace AppBase
             HashSet<string> permitidos = ObtenerNombresDePermisos_755ME();
             foreach (ToolStripItem c in itemsMenu)
             {
-                if (c.Name != "sesiónToolStripMenuItem" && c.Name != "idiomaToolStripMenuItem")
+                // la ayuda no lleva patente, pero solo se ve con sesion iniciada
+                if (c.Name != "sesiónToolStripMenuItem" && c.Name != "idiomaToolStripMenuItem" && c.Name != "mnuAyuda_755ME")
                 {
                     AplicarPermisos_755ME(c, permitidos, false);
                 }
             }
+            mnuAyuda_755ME.Visible = SessionManager.EstaLogueado();
             ActualizarIdioma(SessionManager.Idioma);
             CargarIdiomas();
         }
@@ -150,7 +157,7 @@ namespace AppBase
             AbrirHijo(new FormExpensa_755ME());
         }
 
-        private void mnuRegistrarPago_755ME_Click(object sender, EventArgs e)
+        private void mnuCobrarExpensa_755ME_Click(object sender, EventArgs e)
         {
             AbrirHijo(new FormPago_755ME());
         }
@@ -215,6 +222,26 @@ namespace AppBase
             f.MdiParent = this;
             f.WindowState = FormWindowState.Maximized;
             f.Show();
+        }
+
+        private void AbrirReporteGlobal_755ME(object sender, EventArgs e)
+        {
+            FormReporteGlobal_755ME f = new FormReporteGlobal_755ME();
+            f.MdiParent = this;
+            f.WindowState = FormWindowState.Maximized;
+            f.Show();
+        }
+
+        private void AbrirAyuda_755ME(object sender, EventArgs e)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this);
+        }
+
+        // f1 sin ninguna pantalla abierta abre el indice
+        private void frmMdiPrincipal_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this);
+            hlpevent.Handled = true;
         }
 
         private void AbrirSerializacionExpensas_755ME(object sender, EventArgs e)

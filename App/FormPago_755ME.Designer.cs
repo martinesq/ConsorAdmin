@@ -37,7 +37,7 @@ namespace AppBase
             numMonto = new System.Windows.Forms.NumericUpDown();
             lblMedio = new System.Windows.Forms.Label();
             cboMedio = new System.Windows.Forms.ComboBox();
-            btnRegistrarPago = new System.Windows.Forms.Button();
+            btnCobrarExpensa = new System.Windows.Forms.Button();
             lblResultado = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)dgvExpensasPendientes).BeginInit();
             grpExpensa.SuspendLayout();
@@ -195,7 +195,7 @@ namespace AppBase
             //
             // grpPago
             //
-            grpPago.Controls.Add(btnRegistrarPago);
+            grpPago.Controls.Add(btnCobrarExpensa);
             grpPago.Controls.Add(cboMedio);
             grpPago.Controls.Add(lblMedio);
             grpPago.Controls.Add(numMonto);
@@ -206,8 +206,8 @@ namespace AppBase
             grpPago.Size = new System.Drawing.Size(690, 110);
             grpPago.TabIndex = 8;
             grpPago.TabStop = false;
-            grpPago.Text = "Registrar pago";
-            grpPago.Tag = "lb_registrar_pago";
+            grpPago.Text = "Cobrar expensa";
+            grpPago.Tag = "lb_cobrar_expensa";
             //
             // lblMonto
             //
@@ -247,15 +247,15 @@ namespace AppBase
             cboMedio.Size = new System.Drawing.Size(150, 23);
             cboMedio.TabIndex = 3;
             //
-            // btnRegistrarPago
+            // btnCobrarExpensa
             //
-            btnRegistrarPago.Location = new System.Drawing.Point(110, 65);
-            btnRegistrarPago.Name = "btnRegistrarPago";
-            btnRegistrarPago.Size = new System.Drawing.Size(150, 28);
-            btnRegistrarPago.TabIndex = 4;
-            btnRegistrarPago.Text = "Registrar pago";
-            btnRegistrarPago.Tag = "lb_registrar_pago";
-            btnRegistrarPago.Click += btnRegistrarPago_Click;
+            btnCobrarExpensa.Location = new System.Drawing.Point(110, 65);
+            btnCobrarExpensa.Name = "btnCobrarExpensa";
+            btnCobrarExpensa.Size = new System.Drawing.Size(150, 28);
+            btnCobrarExpensa.TabIndex = 4;
+            btnCobrarExpensa.Text = "Cobrar expensa";
+            btnCobrarExpensa.Tag = "lb_cobrar_expensa";
+            btnCobrarExpensa.Click += btnCobrarExpensa_Click;
             //
             // lblResultado
             //
@@ -282,8 +282,9 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(720, 500);
             Name = "FormPago_755ME";
-            Text = "Registrar pago";
-            Tag = "lb_registrar_pago";
+            HelpRequested += FormPago_755ME_HelpRequested;
+            Text = "Cobrar expensa";
+            Tag = "lb_cobrar_expensa";
             Load += FormPago_755ME_Load;
             FormClosing += FormPago_755ME_FormClosing;
             ((System.ComponentModel.ISupportInitialize)dgvExpensasPendientes).EndInit();
@@ -318,7 +319,7 @@ namespace AppBase
         private System.Windows.Forms.NumericUpDown numMonto;
         private System.Windows.Forms.Label lblMedio;
         private System.Windows.Forms.ComboBox cboMedio;
-        private System.Windows.Forms.Button btnRegistrarPago;
+        private System.Windows.Forms.Button btnCobrarExpensa;
         private System.Windows.Forms.Label lblResultado;
     }
 }

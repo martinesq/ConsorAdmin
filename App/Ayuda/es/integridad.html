@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Resolución de integridad</title>
+</head>
+<body style="font-family: Segoe UI, Arial, sans-serif; font-size: 10pt; margin: 16px;">
+<h1>Resolución de integridad</h1>
+<h3>¿Para qué sirve?</h3>
+<p>Al iniciar sesión el sistema controla los dígitos verificadores. Si algún dato se cambió por fuera del sistema, al administrador se le abre esta pantalla con las tablas y filas que fallan. Los demás usuarios no pueden entrar hasta que se resuelva.</p>
+<h3>Pasos</h3>
+<ol>
+<li>Revisar en la grilla qué tablas, filas y campos fallan.</li>
+<li>Restaurar desde backup: elegir un .bak y confirmar. La base vuelve a ese backup.</li>
+<li>Recalcular dígitos verificadores: se toman los datos actuales como correctos y se vuelven a calcular.</li>
+<li>Cancelar: no se arregla nada y se cierra la sesión.</li>
+</ol>
+<h3>Errores comunes</h3>
+<ul>
+<li>Si aparece <i>La integridad de los datos sigue fallando. Revise el detalle y elija otra acción.</i>: el backup elegido también tiene problemas, probar con otro o recalcular.</li>
+<li>Si aparece <i>El backup restaurado no contiene al administrador actual. Debe iniciar sesión nuevamente.</i>: volver a iniciar sesión con un usuario que exista en ese backup.</li>
+<li>Si aparece <i>Error al restaurar la base de datos / Error al recalcular los dígitos verificadores</i>: volver a intentar y, si sigue, revisar la conexión con la base.</li>
+</ul>
+<p><a href="indice.html">Volver al índice</a></p>
+</body>
+</html>

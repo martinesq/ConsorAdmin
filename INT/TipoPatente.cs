@@ -15,7 +15,7 @@ namespace INT
         GestBackup = 4,
         GestBitacora = 5,
         AnularExpensa_755ME = 6,
-        RegistrarPago_755ME = 7,
+        CobrarExpensa_755ME = 7,
         ReporteGestion_755ME = 8,
         GenerarLiquidacion_755ME = 9,
         GenerarOrdenPago_755ME = 11,
@@ -28,5 +28,6 @@ namespace INT
         AprobarPrestacion_755ME = 20,
         SerializarExpensas_755ME = 21,
         ReporteServicios_755ME = 22,
+        ReporteGlobal_755ME = 23,
     }
 }

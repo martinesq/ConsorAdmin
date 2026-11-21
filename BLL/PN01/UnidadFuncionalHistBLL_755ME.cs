@@ -21,5 +21,14 @@ namespace BLL
         {
             return _histDAL.ObtenerVersionVigenteAFecha_755ME(idUnidadFuncional, fecha);
         }
+
+        public List<UnidadFuncionalHistBE_755ME> ObtenerHistorialFiltrado_755ME(int idConsorcio, int? idUnidadFuncional, string numero, DateTime? desde, DateTime? hasta)
+        {
+            if (desde.HasValue && hasta.HasValue && desde.Value.Date > hasta.Value.Date)
+            {
+                throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta");
+            }
+            return _histDAL.ObtenerHistorialFiltrado_755ME(idConsorcio, idUnidadFuncional, numero, desde, hasta);
+        }
     }
 }

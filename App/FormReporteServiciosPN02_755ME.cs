@@ -152,5 +152,11 @@ namespace AppBase
         {
             SessionManager.QuitarObservador(this);
         }
+
+        private void FormReporteServiciosPN02_755ME_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "reporte-servicios");
+            hlpevent.Handled = true;
+        }
     }
 }

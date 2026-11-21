@@ -239,6 +239,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormLiquidacion_755ME";
+            HelpRequested += FormLiquidacion_755ME_HelpRequested;
             Text = "Generar liquidación de expensas";
             Tag = "lb_generar_liquidacion";
             Load += FormLiquidacion_755ME_Load;

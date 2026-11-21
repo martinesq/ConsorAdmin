@@ -278,5 +278,11 @@ namespace AppBase
             SessionManager.QuitarObservador(this);
         }
 
+        private void frmUsuarios_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "usuarios");
+            hlpevent.Handled = true;
+        }
+
     }
 }

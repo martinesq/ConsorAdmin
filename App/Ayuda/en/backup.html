@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Backup / Restore</title>
+</head>
+<body style="font-family: Segoe UI, Arial, sans-serif; font-size: 10pt; margin: 16px;">
+<h1>Backup / Restore</h1>
+<h3>What is it for?</h3>
+<p>Used to make a security copy of the database in a .bak file and to take the database back to how it was in a backup.</p>
+<h3>Steps</h3>
+<ol>
+<li>Go to Database &gt; Backup / Restore.</li>
+<li>To make a copy press Make Backup and choose where to save the .bak file.</li>
+<li>To restore press Restore, choose the .bak file and confirm. The current data is lost.</li>
+</ol>
+<h3>Common errors</h3>
+<ul>
+<li>If you see <i>Error performing backup</i>: check that the folder exists. The file is written by SQL Server, so the folder has to be accessible for the service.</li>
+<li>If you see <i>This action replaces the current data. Do you want to continue?</i>: press Yes only if you want to go back to that backup.</li>
+<li>If you see <i>Error restoring database</i>: check that the file is a backup of this database and that there are no other open connections.</li>
+</ul>
+<p><a href="indice.html">Back to the index</a></p>
+</body>
+</html>

@@ -21,8 +21,13 @@ namespace AppBase
             rbPorId = new System.Windows.Forms.RadioButton();
             rbPorNumero = new System.Windows.Forms.RadioButton();
             txtBusqueda = new System.Windows.Forms.TextBox();
-            btnBuscar = new System.Windows.Forms.Button();
+            lblDesde = new System.Windows.Forms.Label();
+            dtpDesde = new System.Windows.Forms.DateTimePicker();
+            lblHasta = new System.Windows.Forms.Label();
+            dtpHasta = new System.Windows.Forms.DateTimePicker();
             btnAplicar = new System.Windows.Forms.Button();
+            btnLimpiar = new System.Windows.Forms.Button();
+            btnActivar = new System.Windows.Forms.Button();
             lblHistorial = new System.Windows.Forms.Label();
             dgvHistorial = new System.Windows.Forms.DataGridView();
             colHFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -83,26 +88,75 @@ namespace AppBase
             txtBusqueda.Size = new System.Drawing.Size(120, 23);
             txtBusqueda.TabIndex = 3;
             //
-            // btnBuscar
+            // lblDesde
             //
-            btnBuscar.Location = new System.Drawing.Point(340, 11);
-            btnBuscar.Name = "btnBuscar";
-            btnBuscar.Size = new System.Drawing.Size(90, 25);
-            btnBuscar.TabIndex = 8;
-            btnBuscar.Text = "Buscar";
-            btnBuscar.UseVisualStyleBackColor = true;
-            btnBuscar.Click += btnBuscar_Click;
+            lblDesde.AutoSize = true;
+            lblDesde.Location = new System.Drawing.Point(345, 15);
+            lblDesde.Name = "lblDesde";
+            lblDesde.Size = new System.Drawing.Size(73, 15);
+            lblDesde.TabIndex = 10;
+            lblDesde.Text = "Fecha desde:";
+            //
+            // dtpDesde
+            //
+            dtpDesde.Checked = false;
+            dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpDesde.Location = new System.Drawing.Point(422, 12);
+            dtpDesde.Name = "dtpDesde";
+            dtpDesde.ShowCheckBox = true;
+            dtpDesde.Size = new System.Drawing.Size(120, 23);
+            dtpDesde.TabIndex = 11;
+            //
+            // lblHasta
+            //
+            lblHasta.AutoSize = true;
+            lblHasta.Location = new System.Drawing.Point(552, 15);
+            lblHasta.Name = "lblHasta";
+            lblHasta.Size = new System.Drawing.Size(70, 15);
+            lblHasta.TabIndex = 12;
+            lblHasta.Text = "Fecha hasta:";
+            //
+            // dtpHasta
+            //
+            dtpHasta.Checked = false;
+            dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            dtpHasta.Location = new System.Drawing.Point(626, 12);
+            dtpHasta.Name = "dtpHasta";
+            dtpHasta.ShowCheckBox = true;
+            dtpHasta.Size = new System.Drawing.Size(120, 23);
+            dtpHasta.TabIndex = 13;
             //
             // btnAplicar
             //
-            btnAplicar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            btnAplicar.Location = new System.Drawing.Point(12, 418);
+            btnAplicar.Location = new System.Drawing.Point(758, 11);
             btnAplicar.Name = "btnAplicar";
-            btnAplicar.Size = new System.Drawing.Size(90, 28);
-            btnAplicar.TabIndex = 9;
+            btnAplicar.Size = new System.Drawing.Size(90, 25);
+            btnAplicar.TabIndex = 8;
             btnAplicar.Text = "Aplicar";
             btnAplicar.UseVisualStyleBackColor = true;
             btnAplicar.Click += btnAplicar_Click;
+            //
+            // btnLimpiar
+            //
+            btnLimpiar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            btnLimpiar.Location = new System.Drawing.Point(12, 418);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new System.Drawing.Size(90, 28);
+            btnLimpiar.TabIndex = 14;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
+            //
+            // btnActivar
+            //
+            btnActivar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            btnActivar.Location = new System.Drawing.Point(108, 418);
+            btnActivar.Name = "btnActivar";
+            btnActivar.Size = new System.Drawing.Size(90, 28);
+            btnActivar.TabIndex = 9;
+            btnActivar.Text = "Activar";
+            btnActivar.UseVisualStyleBackColor = true;
+            btnActivar.Click += btnActivar_Click;
             //
             // lblHistorial
             //
@@ -263,14 +317,20 @@ namespace AppBase
             Controls.Add(lblVigente);
             Controls.Add(dgvHistorial);
             Controls.Add(lblHistorial);
-            Controls.Add(btnBuscar);
             Controls.Add(btnAplicar);
+            Controls.Add(btnLimpiar);
+            Controls.Add(btnActivar);
+            Controls.Add(dtpHasta);
+            Controls.Add(lblHasta);
+            Controls.Add(dtpDesde);
+            Controls.Add(lblDesde);
             Controls.Add(txtBusqueda);
             Controls.Add(rbPorNumero);
             Controls.Add(rbPorId);
             Controls.Add(lblBuscarPor);
             MinimizeBox = false;
             Name = "FormHistorialUnidad_755ME";
+            HelpRequested += FormHistorialUnidad_755ME_HelpRequested;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "Bitácora de Cambios — Unidad Funcional";
             ((System.ComponentModel.ISupportInitialize)dgvHistorial).EndInit();
@@ -285,8 +345,13 @@ namespace AppBase
         private System.Windows.Forms.RadioButton rbPorId;
         private System.Windows.Forms.RadioButton rbPorNumero;
         private System.Windows.Forms.TextBox txtBusqueda;
-        private System.Windows.Forms.Button btnBuscar;
+        private System.Windows.Forms.Label lblDesde;
+        private System.Windows.Forms.DateTimePicker dtpDesde;
+        private System.Windows.Forms.Label lblHasta;
+        private System.Windows.Forms.DateTimePicker dtpHasta;
         private System.Windows.Forms.Button btnAplicar;
+        private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.Button btnActivar;
         private System.Windows.Forms.Label lblHistorial;
         private System.Windows.Forms.DataGridView dgvHistorial;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHFecha;

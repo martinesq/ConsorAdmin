@@ -253,6 +253,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormAprobacionPrestacion_755ME";
+            HelpRequested += FormAprobacionPrestacion_755ME_HelpRequested;
             Text = "Aprobar prestación";
             Tag = "lb_aprobar_prestacion";
             Load += FormAprobacionPrestacion_755ME_Load;

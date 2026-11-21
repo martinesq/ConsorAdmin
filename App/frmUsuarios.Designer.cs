@@ -327,13 +327,13 @@
             // lbEmail
             // 
             lbEmail.AutoSize = true;
-            lbEmail.Location = new Point(697, 377);
+            lbEmail.Location = new Point(651, 377);
             lbEmail.Margin = new Padding(4, 0, 4, 0);
             lbEmail.Name = "lbEmail";
-            lbEmail.Size = new Size(54, 25);
+            lbEmail.Size = new Size(156, 25);
             lbEmail.TabIndex = 12;
-            lbEmail.Tag = "lb_email";
-            lbEmail.Text = "Email";
+            lbEmail.Tag = "lb_nombre_usuario";
+            lbEmail.Text = "Nombre de usuario";
             // 
             // lbPass
             // 
@@ -558,6 +558,7 @@
             Controls.Add(dataUsuarios);
             Margin = new Padding(4, 5, 4, 5);
             Name = "frmUsuarios";
+            HelpRequested += frmUsuarios_HelpRequested_755ME;
             Tag = "lb_usuarios";
             Text = "Usuarios";
             FormClosing += frmUsuarios_FormClosing;

@@ -99,7 +99,7 @@ namespace AppBase
             lblResultado.Text = "";
         }
 
-        private void btnRegistrarPago_Click(object sender, EventArgs e)
+        private void btnCobrarExpensa_Click(object sender, EventArgs e)
         {
             if (_expensaPendiente == null || cboMedio.SelectedItem == null) return;
             decimal monto = numMonto.Value;
@@ -116,7 +116,7 @@ namespace AppBase
 
             try
             {
-                (ExpensaBE_755ME expensa, PagoBE_755ME comprobante) = _bll.RegistrarPago_755ME(_expensaPendiente.IdExpensa_755ME, monto, cboMedio.Text);
+                (ExpensaBE_755ME expensa, PagoBE_755ME comprobante) = _bll.CobrarExpensa_755ME(_expensaPendiente.IdExpensa_755ME, monto, cboMedio.Text);
                 lblResultado.Text = expensa.Estado_755ME != "Pagada"
                     ? "Expensa pagada parcialmente. Saldo restante: " + (_expensaPendiente.Saldo_755ME - monto).ToString("F2")
                     : "Expensa pagada. Comprobante: " + comprobante.NumeroComprobante_755ME;
@@ -138,6 +138,12 @@ namespace AppBase
         private void FormPago_755ME_FormClosing(object sender, FormClosingEventArgs e)
         {
             SessionManager.QuitarObservador(this);
+        }
+
+        private void FormPago_755ME_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "pagos");
+            hlpevent.Handled = true;
         }
     }
 }

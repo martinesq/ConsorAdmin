@@ -125,5 +125,11 @@ namespace AppBase
         {
             SessionManager.QuitarObservador(this);
         }
+
+        private void FormPrestacion_755ME_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "cargar-prestacion");
+            hlpevent.Handled = true;
+        }
     }
 }

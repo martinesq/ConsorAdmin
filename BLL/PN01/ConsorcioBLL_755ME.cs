@@ -10,7 +10,7 @@ namespace BLL
         // patentes que identifican a un gestor de consorcios (directas o por familia)
         private static readonly TipoPatente[] _patentesDeGestor_755ME =
         {
-            TipoPatente.AnularExpensa_755ME, TipoPatente.RegistrarPago_755ME, TipoPatente.ReporteGestion_755ME,
+            TipoPatente.AnularExpensa_755ME, TipoPatente.CobrarExpensa_755ME, TipoPatente.ReporteGestion_755ME,
             TipoPatente.GenerarLiquidacion_755ME, TipoPatente.GenerarOrdenPago_755ME, TipoPatente.RegistrarEgreso_755ME,
             TipoPatente.GestGastos_755ME, TipoPatente.FormalizarSolicitud_755ME, TipoPatente.AsignarProveedor_755ME,
             TipoPatente.CargarPrestacion_755ME, TipoPatente.AprobarPrestacion_755ME

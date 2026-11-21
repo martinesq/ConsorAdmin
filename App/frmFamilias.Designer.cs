@@ -346,6 +346,7 @@
             Controls.Add(dataGridView2);
             Controls.Add(dataGridView1);
             Name = "frmFamilias";
+            HelpRequested += frmFamilias_HelpRequested_755ME;
             Tag = "lb_familias";
             Text = "Familias";
             FormClosing += frmFamilias_FormClosing;

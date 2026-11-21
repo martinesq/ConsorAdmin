@@ -203,6 +203,7 @@
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 480);
             Name = "FormEgreso_755ME";
+            HelpRequested += FormEgreso_755ME_HelpRequested;
             Text = "Registrar egreso a proveedor";
             Tag = "lb_registrar_egreso";
             Load += FormEgreso_755ME_Load;

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.SqlClient;
 using BE;
 
 namespace DAL
@@ -48,6 +49,38 @@ namespace DAL
                 "SELECT TOP 1 * FROM UNIDAD_FUNCIONAL_C WHERE IdUnidadFuncional=@idUnidadFuncional AND Fecha<=@fecha ORDER BY Fecha DESC, Hora DESC, IdHistorico DESC",
                 AccesoDatos_755ME.Parametro_755ME("@idUnidadFuncional", idUnidadFuncional), AccesoDatos_755ME.Parametro_755ME("@fecha", fecha.Date));
             return tabla.Rows.Count == 0 ? null : Mapear_755ME(tabla.Rows[0]);
+        }
+
+        // cada filtro que viene informado agrega su condicion
+        public List<UnidadFuncionalHistBE_755ME> ObtenerHistorialFiltrado_755ME(int idConsorcio, int? idUnidadFuncional, string numero, DateTime? desde, DateTime? hasta)
+        {
+            string sql = "SELECT * FROM UNIDAD_FUNCIONAL_C WHERE IdConsorcio=@idConsorcio";
+            List<SqlParameter> parametros = new List<SqlParameter> { AccesoDatos_755ME.Parametro_755ME("@idConsorcio", idConsorcio) };
+            if (idUnidadFuncional.HasValue)
+            {
+                sql += " AND IdUnidadFuncional=@idUnidadFuncional";
+                parametros.Add(AccesoDatos_755ME.Parametro_755ME("@idUnidadFuncional", idUnidadFuncional.Value));
+            }
+            if (!string.IsNullOrWhiteSpace(numero))
+            {
+                sql += " AND Numero=@numero";
+                parametros.Add(AccesoDatos_755ME.Parametro_755ME("@numero", numero.Trim()));
+            }
+            if (desde.HasValue)
+            {
+                sql += " AND Fecha>=@desde";
+                parametros.Add(AccesoDatos_755ME.Parametro_755ME("@desde", desde.Value.Date));
+            }
+            if (hasta.HasValue)
+            {
+                sql += " AND Fecha<=@hasta";
+                parametros.Add(AccesoDatos_755ME.Parametro_755ME("@hasta", hasta.Value.Date));
+            }
+            sql += " ORDER BY Fecha DESC, Hora DESC, IdHistorico DESC";
+            DataTable tabla = AccesoDatos_755ME.Consultar_755ME(sql, parametros.ToArray());
+            List<UnidadFuncionalHistBE_755ME> lista = new List<UnidadFuncionalHistBE_755ME>();
+            foreach (DataRow fila in tabla.Rows) lista.Add(Mapear_755ME(fila));
+            return lista;
         }
     }
 }

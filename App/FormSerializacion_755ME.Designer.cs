@@ -159,6 +159,7 @@ namespace AppBase
             Controls.Add(cboConsorcio_755ME);
             Controls.Add(lblConsorcio_755ME);
             Name = "FormSerializacion_755ME";
+            HelpRequested += FormSerializacion_755ME_HelpRequested;
             Tag = "lb_ser_titulo";
             Text = "Serializar/Deserializar expensas";
             FormClosing += FormSerializacion_755ME_FormClosing;

@@ -205,6 +205,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormAsignacionProveedor_755ME";
+            HelpRequested += FormAsignacionProveedor_755ME_HelpRequested;
             Text = "Asignar proveedor al servicio";
             Tag = "lb_asignar_proveedor";
             Load += FormAsignacionProveedor_755ME_Load;

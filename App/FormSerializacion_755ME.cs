@@ -94,5 +94,11 @@ namespace AppBase
         {
             SessionManager.QuitarObservador(this);
         }
+
+        private void FormSerializacion_755ME_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "serializacion");
+            hlpevent.Handled = true;
+        }
     }
 }

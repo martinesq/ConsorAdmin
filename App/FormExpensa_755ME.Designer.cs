@@ -190,6 +190,7 @@ namespace AppBase
             Controls.Add(tabExpensa);
             MinimumSize = new System.Drawing.Size(900, 600);
             Name = "FormExpensa_755ME";
+            HelpRequested += FormExpensa_755ME_HelpRequested;
             Text = "Anular / revisar composición de expensa";
             Tag = "lb_expensa_titulo";
             Load += FormExpensa_755ME_Load;

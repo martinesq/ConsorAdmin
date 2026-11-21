@@ -246,6 +246,7 @@ namespace AppBase
             Controls.Add(lbExportOk);
             Controls.Add(lbExportError);
             Name = "frmBitacora";
+            HelpRequested += frmBitacora_HelpRequested_755ME;
             Tag = "lb_bitacora";
             Text = "Bitacora";
             FormClosing += frmBitacora_FormClosing;

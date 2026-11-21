@@ -112,5 +112,11 @@ namespace AppBase
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void frmIntegridad_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "integridad");
+            hlpevent.Handled = true;
+        }
     }
 }

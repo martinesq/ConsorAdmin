@@ -219,6 +219,7 @@ namespace AppBase
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmIntegridad";
+            HelpRequested += frmIntegridad_HelpRequested_755ME;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Tag = "lb_integridadTitulo";

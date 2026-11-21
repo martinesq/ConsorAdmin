@@ -9,7 +9,7 @@ namespace BLL
         private readonly VerificadorBLL _verificador = new VerificadorBLL();
         private readonly BitacoraBLL _bitacora = new BitacoraBLL();
 
-        // datos que deja RegistrarPago_755ME para ImputarPago_755ME
+        // datos que deja CobrarExpensa_755ME para ImputarPago_755ME
         private string _medioEnCurso = "";
         private decimal _saldoPendienteEnCurso;
 
@@ -56,7 +56,7 @@ namespace BLL
         }
 
         // FA-3 y FA-4: por debajo del saldo queda PagadaParcial, igual o por encima queda Pagada
-        public (ExpensaBE_755ME expensa, PagoBE_755ME comprobante) RegistrarPago_755ME(int idExpensa, decimal monto, string medio)
+        public (ExpensaBE_755ME expensa, PagoBE_755ME comprobante) CobrarExpensa_755ME(int idExpensa, decimal monto, string medio)
         {
             ExpensaBLL_755ME expensaBLL = new ExpensaBLL_755ME();
             ExpensaBE_755ME expensa = expensaBLL.ObtenerPorId_755ME(idExpensa);
@@ -71,7 +71,7 @@ namespace BLL
                 : "Pagada";
             expensa = expensaBLL.ActualizarEstado_755ME(idExpensa, estadoNuevo);
 
-            _bitacora.RegistrarDeUsuarioActual("Registrar pago", idExpensa.ToString(),
+            _bitacora.RegistrarDeUsuarioActual("Cobrar expensa", idExpensa.ToString(),
                 comprobante.Monto_755ME.ToString("F2") + " " + _medioEnCurso);
             return (expensa, comprobante);
         }

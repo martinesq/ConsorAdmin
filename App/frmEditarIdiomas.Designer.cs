@@ -215,6 +215,7 @@
             Controls.Add(btnCrear);
             Margin = new Padding(2);
             Name = "frmEditarIdiomas";
+            HelpRequested += frmEditarIdiomas_HelpRequested_755ME;
             Text = "frmEditarIdiomas";
             FormClosing += frmEditarIdiomas_FormClosing;
             Load += frmEditarIdiomas_Load;

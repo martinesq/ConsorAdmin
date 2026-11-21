@@ -41,12 +41,14 @@
             bitacoraToolStripMenuItem = new ToolStripMenuItem();
             mnuLiquidacionExpensas_755ME = new ToolStripMenuItem();
             mnuAnularExpensa_755ME = new ToolStripMenuItem();
-            mnuRegistrarPago_755ME = new ToolStripMenuItem();
+            mnuCobrarExpensa_755ME = new ToolStripMenuItem();
             mnuGenerarLiquidacion_755ME = new ToolStripMenuItem();
             mnuGenerarOrdenPago_755ME = new ToolStripMenuItem();
             mnuRegistrarEgreso_755ME = new ToolStripMenuItem();
             mnuGestGastos_755ME = new ToolStripMenuItem();
             mnuReporteGestion_755ME = new ToolStripMenuItem();
+            mnuReporteGlobal_755ME = new ToolStripMenuItem();
+            mnuAyuda_755ME = new ToolStripMenuItem();
             mnuMantenimientoConsorcios_755ME = new ToolStripMenuItem();
             mnuSerializarExpensas_755ME = new ToolStripMenuItem();
             mnuServicios_755ME = new ToolStripMenuItem();
@@ -63,7 +65,7 @@
             // menuPrincipal
             // 
             menuPrincipal.ImageScalingSize = new Size(24, 24);
-            menuPrincipal.Items.AddRange(new ToolStripItem[] { sesiónToolStripMenuItem, usuariosToolStripMenuItem, familiasToolStripMenuItem, idiomaToolStripMenuItem, nuevoIdiomaToolStripMenuItem, baseDeDatosToolStripMenuItem, bitacoraToolStripMenuItem, mnuMantenimientoConsorcios_755ME, mnuSerializarExpensas_755ME, mnuLiquidacionExpensas_755ME, mnuServicios_755ME });
+            menuPrincipal.Items.AddRange(new ToolStripItem[] { sesiónToolStripMenuItem, usuariosToolStripMenuItem, familiasToolStripMenuItem, idiomaToolStripMenuItem, nuevoIdiomaToolStripMenuItem, baseDeDatosToolStripMenuItem, bitacoraToolStripMenuItem, mnuMantenimientoConsorcios_755ME, mnuSerializarExpensas_755ME, mnuLiquidacionExpensas_755ME, mnuServicios_755ME, mnuReporteGlobal_755ME, mnuAyuda_755ME });
             menuPrincipal.Location = new Point(0, 0);
             menuPrincipal.Name = "menuPrincipal";
             menuPrincipal.Size = new Size(1220, 24);
@@ -153,7 +155,7 @@
             //
             // mnuLiquidacionExpensas_755ME
             //
-            mnuLiquidacionExpensas_755ME.DropDownItems.AddRange(new ToolStripItem[] { mnuAnularExpensa_755ME, mnuRegistrarPago_755ME, mnuGenerarLiquidacion_755ME, mnuGenerarOrdenPago_755ME, mnuRegistrarEgreso_755ME, mnuGestGastos_755ME, mnuReporteGestion_755ME });
+            mnuLiquidacionExpensas_755ME.DropDownItems.AddRange(new ToolStripItem[] { mnuAnularExpensa_755ME, mnuCobrarExpensa_755ME, mnuGenerarLiquidacion_755ME, mnuGenerarOrdenPago_755ME, mnuRegistrarEgreso_755ME, mnuGestGastos_755ME, mnuReporteGestion_755ME });
             mnuLiquidacionExpensas_755ME.Name = "mnuLiquidacionExpensas_755ME";
             mnuLiquidacionExpensas_755ME.Size = new Size(160, 20);
             mnuLiquidacionExpensas_755ME.Text = "Liquidación de Expensas";
@@ -168,13 +170,13 @@
             mnuAnularExpensa_755ME.Tag = "lb_anular_expensa";
             mnuAnularExpensa_755ME.Click += mnuAnularExpensa_755ME_Click;
             //
-            // mnuRegistrarPago_755ME
+            // mnuCobrarExpensa_755ME
             //
-            mnuRegistrarPago_755ME.Name = "mnuRegistrarPago_755ME";
-            mnuRegistrarPago_755ME.Size = new Size(238, 22);
-            mnuRegistrarPago_755ME.Text = "Registrar pago";
-            mnuRegistrarPago_755ME.Tag = "lb_registrar_pago";
-            mnuRegistrarPago_755ME.Click += mnuRegistrarPago_755ME_Click;
+            mnuCobrarExpensa_755ME.Name = "mnuCobrarExpensa_755ME";
+            mnuCobrarExpensa_755ME.Size = new Size(238, 22);
+            mnuCobrarExpensa_755ME.Text = "Cobrar expensa";
+            mnuCobrarExpensa_755ME.Tag = "lb_cobrar_expensa";
+            mnuCobrarExpensa_755ME.Click += mnuCobrarExpensa_755ME_Click;
             //
             // mnuGenerarLiquidacion_755ME
             //
@@ -215,6 +217,23 @@
             mnuReporteGestion_755ME.Text = "Reporte de gestión";
             mnuReporteGestion_755ME.Tag = "lb_reporte_gestion";
             mnuReporteGestion_755ME.Click += mnuReporteGestion_755ME_Click;
+            // 
+            // mnuReporteGlobal_755ME
+            // 
+            mnuReporteGlobal_755ME.Name = "mnuReporteGlobal_755ME";
+            mnuReporteGlobal_755ME.Size = new Size(95, 20);
+            mnuReporteGlobal_755ME.Text = "Reporte global";
+            mnuReporteGlobal_755ME.Tag = "lb_reporte_global";
+            mnuReporteGlobal_755ME.Visible = false;
+            mnuReporteGlobal_755ME.Click += AbrirReporteGlobal_755ME;
+            // 
+            // mnuAyuda_755ME
+            // 
+            mnuAyuda_755ME.Name = "mnuAyuda_755ME";
+            mnuAyuda_755ME.Size = new Size(53, 20);
+            mnuAyuda_755ME.Text = "Ayuda";
+            mnuAyuda_755ME.Tag = "lb_ayuda";
+            mnuAyuda_755ME.Click += AbrirAyuda_755ME;
             //
             // mnuMantenimientoConsorcios_755ME
             //
@@ -321,6 +340,7 @@
             WindowState = FormWindowState.Maximized;
             FormClosing += frmMdiPrincipal_FormClosing;
             Load += frmMdiPrincipal_Load;
+            HelpRequested += frmMdiPrincipal_HelpRequested_755ME;
             menuPrincipal.ResumeLayout(false);
             menuPrincipal.PerformLayout();
             ResumeLayout(false);
@@ -345,12 +365,14 @@
         private ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuLiquidacionExpensas_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuAnularExpensa_755ME;
-        private System.Windows.Forms.ToolStripMenuItem mnuRegistrarPago_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuCobrarExpensa_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerarLiquidacion_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerarOrdenPago_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuRegistrarEgreso_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuGestGastos_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuReporteGestion_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuReporteGlobal_755ME;
+        private System.Windows.Forms.ToolStripMenuItem mnuAyuda_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuMantenimientoConsorcios_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuSerializarExpensas_755ME;
         private System.Windows.Forms.ToolStripMenuItem mnuServicios_755ME;

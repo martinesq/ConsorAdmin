@@ -172,6 +172,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormOrdenPago_755ME";
+            HelpRequested += FormOrdenPago_755ME_HelpRequested;
             Text = "Generar orden de pago";
             Tag = "lb_generar_orden_pago";
             Load += FormOrdenPago_755ME_Load;

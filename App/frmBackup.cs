@@ -106,5 +106,11 @@ namespace AppBase
             frmMdiPrincipal f = (frmMdiPrincipal)this.MdiParent;
             f.CambiarIdiomaFormulario(this, idioma);
         }
+
+        private void frmBackup_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "backup");
+            hlpevent.Handled = true;
+        }
     }
 }

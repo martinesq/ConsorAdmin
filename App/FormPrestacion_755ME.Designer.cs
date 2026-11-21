@@ -290,6 +290,7 @@ namespace AppBase
             Controls.Add(lblConsorcio);
             MinimumSize = new System.Drawing.Size(790, 500);
             Name = "FormPrestacion_755ME";
+            HelpRequested += FormPrestacion_755ME_HelpRequested;
             Text = "Cargar prestación del proveedor";
             Tag = "lb_cargar_prestacion";
             Load += FormPrestacion_755ME_Load;

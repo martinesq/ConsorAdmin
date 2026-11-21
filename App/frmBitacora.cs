@@ -110,5 +110,11 @@ namespace AppBase
         {
             SessionManager.QuitarObservador(this);
         }
+
+        private void frmBitacora_HelpRequested_755ME(object sender, HelpEventArgs hlpevent)
+        {
+            FormAyuda_755ME.Mostrar_755ME(this, "bitacora");
+            hlpevent.Handled = true;
+        }
     }
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Backup / Restaurar</title>
+</head>
+<body style="font-family: Segoe UI, Arial, sans-serif; font-size: 10pt; margin: 16px;">
+<h1>Backup / Restaurar</h1>
+<h3>¿Para qué sirve?</h3>
+<p>Sirve para hacer una copia de seguridad de la base de datos en un archivo .bak y para volver la base a como estaba en un backup.</p>
+<h3>Pasos</h3>
+<ol>
+<li>Ir a Base de Datos &gt; Backup / Restaurar.</li>
+<li>Para hacer una copia apretar Hacer Backup y elegir dónde guardar el archivo .bak.</li>
+<li>Para restaurar apretar Restaurar, elegir el archivo .bak y confirmar. Ojo que se pierden los datos actuales.</li>
+</ol>
+<h3>Errores comunes</h3>
+<ul>
+<li>Si aparece <i>Error al realizar el backup</i>: revisar que la carpeta exista. El archivo lo escribe SQL Server, así que la carpeta tiene que ser accesible para el servicio.</li>
+<li>Si aparece <i>Esta accion reemplaza los datos actuales. Desea continuar?</i>: apretar Sí solamente si se quiere volver a ese backup.</li>
+<li>Si aparece <i>Error al restaurar la base de datos</i>: revisar que el archivo sea un backup de esta base y que no haya otras conexiones abiertas.</li>
+</ul>
+<p><a href="indice.html">Volver al índice</a></p>
+</body>
+</html>

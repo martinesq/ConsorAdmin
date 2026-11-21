@@ -45,12 +45,11 @@ namespace SER
 
             grafico.DrawString(titulo, fuenteTitulo, XBrushes.Black, new XPoint(Margen, y + 10));
             y += 30;
-            DibujarFila(grafico, encabezados, fuenteEncabezado, y, anchoColumna, altoFila, true);
-            y += altoFila;
+            y += DibujarFila(grafico, encabezados, fuenteEncabezado, y, anchoColumna, altoFila, true);
 
             foreach (List<string> fila in filas)
             {
-                if (y + altoFila > pagina.Height.Point - Margen)
+                if (y + AltoFila_755ME(grafico, fila, fuenteCelda, anchoColumna, altoFila) > pagina.Height.Point - Margen)
                 {
                     grafico.Dispose();
                     pagina = documento.AddPage();
@@ -58,17 +57,18 @@ namespace SER
                     pagina.Orientation = PdfSharp.PageOrientation.Landscape;
                     grafico = XGraphics.FromPdfPage(pagina);
                     y = Margen;
-                    DibujarFila(grafico, encabezados, fuenteEncabezado, y, anchoColumna, altoFila, true);
-                    y += altoFila;
+                    y += DibujarFila(grafico, encabezados, fuenteEncabezado, y, anchoColumna, altoFila, true);
                 }
-                DibujarFila(grafico, fila, fuenteCelda, y, anchoColumna, altoFila, false);
-                y += altoFila;
+                y += DibujarFila(grafico, fila, fuenteCelda, y, anchoColumna, altoFila, false);
             }
             grafico.Dispose();
         }
 
-        private static void DibujarFila(XGraphics grafico, List<string> celdas, XFont fuente, double y, double anchoColumna, double alto, bool encabezado)
+        // devuelve el alto que ocupo la fila: crece si algun texto no entra en una linea
+        private static double DibujarFila(XGraphics grafico, List<string> celdas, XFont fuente, double y, double anchoColumna, double altoMinimo, bool encabezado)
         {
+            double alto = AltoFila_755ME(grafico, celdas, fuente, anchoColumna, altoMinimo);
+            double altoLinea = fuente.GetHeight();
             for (int i = 0; i < celdas.Count; i++)
             {
                 XRect rect = new XRect(Margen + i * anchoColumna, y, anchoColumna, alto);
@@ -77,9 +77,43 @@ namespace SER
                     grafico.DrawRectangle(XBrushes.LightGray, rect);
                 }
                 grafico.DrawRectangle(XPens.Gray, rect);
-                grafico.DrawString(celdas[i] ?? "", fuente, XBrushes.Black,
-                    new XRect(rect.X + 2, rect.Y, rect.Width - 4, rect.Height), XStringFormats.CenterLeft);
+                List<string> lineas = PartirTexto_755ME(grafico, celdas[i] ?? "", fuente, anchoColumna - 4);
+                double inicio = y + (alto - lineas.Count * altoLinea) / 2;
+                for (int l = 0; l < lineas.Count; l++)
+                {
+                    grafico.DrawString(lineas[l], fuente, XBrushes.Black,
+                        new XRect(rect.X + 2, inicio + l * altoLinea, rect.Width - 4, altoLinea), XStringFormats.CenterLeft);
+                }
             }
+            return alto;
+        }
+
+        private static double AltoFila_755ME(XGraphics grafico, List<string> celdas, XFont fuente, double anchoColumna, double altoMinimo)
+        {
+            int lineas = celdas.Max(c => PartirTexto_755ME(grafico, c ?? "", fuente, anchoColumna - 4).Count);
+            return Math.Max(altoMinimo, lineas * fuente.GetHeight() + 4);
+        }
+
+        // corta por palabras para que el texto no se pise con la celda de al lado
+        private static List<string> PartirTexto_755ME(XGraphics grafico, string texto, XFont fuente, double ancho)
+        {
+            List<string> lineas = new List<string>();
+            string actual = "";
+            foreach (string palabra in texto.Split(' '))
+            {
+                string prueba = actual == "" ? palabra : actual + " " + palabra;
+                if (actual != "" && grafico.MeasureString(prueba, fuente).Width > ancho)
+                {
+                    lineas.Add(actual);
+                    actual = palabra;
+                }
+                else
+                {
+                    actual = prueba;
+                }
+            }
+            lineas.Add(actual);
+            return lineas;
         }
     }
 }
